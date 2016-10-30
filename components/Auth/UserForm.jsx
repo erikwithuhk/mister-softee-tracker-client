@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 const propTypes = {
   route: React.PropTypes.object,
+  submitUserForm: React.PropTypes.func,
 };
 
 class UserForm extends Component {
@@ -23,14 +24,29 @@ class UserForm extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
+    if (this.props.route.path === 'login') {
+      this.props.submitUserForm({ type: 'login', userData: this.state });
+    } else {
+      this.props.submitUserForm({ type: 'signup', userData: this.state });
+    }
   }
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
         <label htmlFor="email" >Email</label>
-        <input name="email" type="email" value={this.state.email} onChange={this.handleChange} />
+        <input
+          name="email"
+          type="email"
+          value={this.state.email}
+          onChange={this.handleChange}
+        />
         <label htmlFor="password" >Password</label>
-        <input name="password" type="password" value={this.state.password} onChange={this.handleChange} />
+        <input
+          name="password"
+          type="password"
+          value={this.state.password}
+          onChange={this.handleChange}
+        />
         <input
           type="submit"
           value={this.props.route.path === 'login' ? 'Log in' : 'Create an account'}
