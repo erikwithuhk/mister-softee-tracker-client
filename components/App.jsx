@@ -13,36 +13,47 @@ class App extends Component {
       token: null,
     };
     this.submitUserForm = this.submitUserForm.bind(this);
+    this.signOut = this.signOut.bind(this);
   }
-  updateAuth() {
-    this.setState({
-      token: cookie.load('token'),
-    });
+  componentDidMount() {
+    this.updateAuth();
   }
   submitUserForm({ type, userData }) {
+    let url;
     if (type === 'login') {
-      this.logInUser(userData);
-    } else {
-      this.createUser(userData);
+      url = '/api/v1/login';
+    } else if (type === 'signup') {
+      url = '/api/v1/signup';
     }
-  }
-  logInUser({ email, password }) {
-    const url = '/api/v1/login';
     request.post(url)
-           .send({ email, password })
+           .send(userData)
            .then(() => this.updateAuth())
            .catch(err => console.error(err));
   }
-  createUser({ email, password }) {
-    console.log('create', email, password);
+  signOut() {
+    request.delete('/api/v1/signout')
+           .then(() => this.updateAuth())
+           .catch(err => console.error(err));
+  }
+  updateAuth() {
+    this.setState({
+      token: cookie.load('token') || null,
+    });
   }
   render() {
+    let signoutButton;
+    if (this.state.token !== null) {
+      signoutButton = (
+        <button onClick={this.signOut}>Sign out</button>
+      );
+    }
     const childrenWithProps = React.cloneElement(this.props.children, {
       currentUser: this.state.currentUser,
       submitUserForm: this.submitUserForm,
     });
     return (
       <div className="app">
+        {signoutButton}
         {childrenWithProps}
       </div>
     );
