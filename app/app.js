@@ -1,6 +1,6 @@
-const express = require('express'),
-      logger = require('morgan')
-      bodyParser = require('body-parser');
+const express = require('express');
+const logger = require('morgan');
+const bodyParser = require('body-parser');
 const apiRouter = require('./routes/apiRouter.js');
 
 const app = express();
@@ -12,6 +12,6 @@ app.use(bodyParser.json());
 
 app.use(logger('dev'));
 
-// app.use('/api', apiRouter);
+app.use('/api/v1', apiRouter);
 
 module.exports = app;
