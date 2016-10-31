@@ -1,5 +1,4 @@
 const superagentRequest = require('superagent');
-
 const createToken = require('../utils/createToken');
 
 const apiBaseURL = 'api.lvh.me:3000/v1';
