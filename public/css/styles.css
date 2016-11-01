@@ -25,11 +25,23 @@ body {
   height: 100%;
 }
 
+input,
+button {
+  -webkit-appearance: none;
+}
+
 
 
 /* =======================
 2. Colors
 
+https://coolors.co/2c58c8-d05879-eee0cb-baa898-3a3a3a
+
+Cerulean blue:   2c58c8
+Cinnamon satin:  d05879
+Almond:          eee0cb
+Tuscany:         baa898
+Black Olive:     3a3a3a
 
 ======================= */
 
