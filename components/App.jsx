@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
-import { signup, login, logOut } from '../actions/authActions';
-import { fetchUsers } from '../actions/userActions';
+import { logOut } from '../actions/authActions';
 
 const propTypes = {
   children: React.PropTypes.element,
@@ -11,7 +11,6 @@ const propTypes = {
 @connect((store) => {
   return {
     session: store.session.session,
-    user: store.users,
   };
 })
 
@@ -19,28 +18,27 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
-    this.fetchUsers = this.fetchUsers.bind(this);
-  }
-  componentDidMount() {
-    const user = {
-      email: 'efjonsson@gmail.com',
-      password: 'password',
-    };
-    this.props.dispatch(signup(user));
   }
   logOut() {
     this.props.dispatch(logOut());
   }
-  fetchUsers() {
-    this.props.dispatch(fetchUsers());
+  authButton() {
+    const { authToken } = this.props.session;
+    if (!authToken && this.props) {
+      return (
+        <Link to="/login">Log in</Link>
+      );
+    }
+    return (
+      <button onClick={this.logOut}>Log out</button>
+    );
   }
   render() {
-    const { email } = this.props.session;
+    const button = this.authButton();
     return (
       <div className="app">
-        <h1>{`This is the App, ${email}`}</h1>
-        <button onClick={this.logOut}>Log out</button>
-        <button onClick={this.fetchUsers}>Fetch users</button>
+        <h1>This is the App</h1>
+        {button}
         {this.props.children}
       </div>
     );

@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
+import { hashHistory, withRouter } from 'react-router';
+import { connect } from 'react-redux';
+
+import { signup, login } from '../../actions/authActions';
 
 const propTypes = {
+  dispatch: React.PropTypes.func,
   route: React.PropTypes.object,
   submitUserForm: React.PropTypes.func,
 };
+
+@connect((store) => {
+  return {};
+})
 
 class UserForm extends Component {
   constructor(props) {
@@ -24,32 +33,39 @@ class UserForm extends Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    if (this.props.route.path === 'login') {
-      this.props.submitUserForm({ type: 'login', userData: this.state });
-    } else {
-      this.props.submitUserForm({ type: 'signup', userData: this.state });
+    const { path } = this.props.route;
+    if (path === 'login') {
+      this.props.dispatch(login(this.state));
+      this.setState({ email: '', password: '' });
+      hashHistory.push('/');
+    } else if (path === 'signup') {
+      this.props.dispatch(signup(this.state));
+      this.setState({ email: '', password: '' });
+      hashHistory.push('/');
     }
   }
   render() {
+    const { email, password } = this.state;
+    const { path } = this.props.route;
     return (
       <form onSubmit={this.handleSubmit}>
         <label htmlFor="email" >Email</label>
         <input
           name="email"
           type="email"
-          value={this.state.email}
+          value={email}
           onChange={this.handleChange}
         />
         <label htmlFor="password" >Password</label>
         <input
           name="password"
           type="password"
-          value={this.state.password}
+          value={password}
           onChange={this.handleChange}
         />
         <input
           type="submit"
-          value={this.props.route.path === 'login' ? 'Log in' : 'Create an account'}
+          value={path === 'login' ? 'Log in' : 'Create an account'}
         />
       </form>
     );
@@ -58,4 +74,4 @@ class UserForm extends Component {
 
 UserForm.propTypes = propTypes;
 
-export default UserForm;
+export default withRouter(UserForm);
