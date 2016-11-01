@@ -3,9 +3,9 @@ import request from 'superagent';
 const loginPath = 'api/authenticate';
 
 class AuthApi {
-  static login({ username, password }) {
+  static login({ email, password }) {
     return request.post(loginPath)
-                  .send({ username, password })
+                  .send({ email, password })
                   .then(response => response.body)
                   .catch(err => err);
   }
