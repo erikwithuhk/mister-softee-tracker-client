@@ -1,8 +1,14 @@
 import axios from 'axios';
 
-const loginPath = 'http://localhost:3000/api/v1/authenticate';
+const signupPath = 'http://localhost:3000/api/v1/signup';
+const loginPath = 'http://localhost:3000/api/v1/login';
 
 class AuthApi {
+  static signup({ email, password }) {
+    return axios.post(signupPath, { user: { email, password } })
+                .then(response => response.data)
+                .catch(err => err);
+  }
   static login({ email, password }) {
     return axios.post(loginPath, { user: { email, password } })
                 .then(response => response.data)

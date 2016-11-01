@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import request from 'superagent';
 
-import { login, logOut } from '../actions/authActions';
+import { signup, login, logOut } from '../actions/authActions';
 import { fetchUsers } from '../actions/userActions';
 
 const propTypes = {
@@ -24,10 +23,10 @@ class App extends Component {
   }
   componentDidMount() {
     const user = {
-      email: 'test@test.com',
+      email: 'efjonsson@gmail.com',
       password: 'password',
     };
-    this.props.dispatch(login(user));
+    this.props.dispatch(signup(user));
   }
   logOut() {
     this.props.dispatch(logOut());
@@ -36,10 +35,10 @@ class App extends Component {
     this.props.dispatch(fetchUsers());
   }
   render() {
-    const { session } = this.props;
+    const { email } = this.props.session;
     return (
       <div className="app">
-        <h1>{`This is the App, ${session.email}`}</h1>
+        <h1>{`This is the App, ${email}`}</h1>
         <button onClick={this.logOut}>Log out</button>
         <button onClick={this.fetchUsers}>Fetch users</button>
         {this.props.children}

@@ -10,6 +10,25 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+    case 'SIGNUP_REQUEST_PENDING': {
+      return { ...state, authRequestInProgress: true };
+    }
+    case 'SIGNUP_REQUEST_FULFILLED': {
+      return {
+        ...state,
+        authRequestInProgress: false,
+        authErrors: [],
+        session: {
+          ...state.session,
+          authToken: action.payload.auth_token,
+          email: action.payload.user.email,
+          userID: action.payload.user.id,
+        },
+      };
+    }
+    case 'SIGNUP_REQUEST_REJECTED': {
+      return { ...state, authRequestInProgress: false, authErrors: action.payload };
+    }
     case 'LOGIN_REQUEST_PENDING': {
       return { ...state, authRequestInProgress: true };
     }
