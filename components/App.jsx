@@ -1,60 +1,29 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import request from 'superagent';
-import cookie from 'react-cookie';
+
+import { setUserName } from '../actions/userActions';
 
 const propTypes = {
   children: React.PropTypes.element,
 };
 
+@connect((store) => {
+  return {
+    user: store.user.user,
+  };
+})
+
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      token: null,
-    };
-    this.submitUserForm = this.submitUserForm.bind(this);
-    this.signOut = this.signOut.bind(this);
-  }
   componentDidMount() {
-    this.updateAuth();
-  }
-  submitUserForm({ type, userData }) {
-    let url;
-    if (type === 'login') {
-      url = '/api/v1/login';
-    } else if (type === 'signup') {
-      url = '/api/v1/signup';
-    }
-    request.post(url)
-           .send(userData)
-           .then(() => this.updateAuth())
-           .catch(err => console.error(err));
-  }
-  signOut() {
-    request.delete('/api/v1/signout')
-           .then(() => this.updateAuth())
-           .catch(err => console.error(err));
-  }
-  updateAuth() {
-    this.setState({
-      token: cookie.load('token') || null,
-    });
+    this.props.dispatch(setUserName('Erik'));
   }
   render() {
-    let signoutButton;
-    if (this.state.token !== null) {
-      signoutButton = (
-        <button onClick={this.signOut}>Sign out</button>
-      );
-    }
-    const childrenWithProps = React.cloneElement(this.props.children, {
-      currentUser: this.state.currentUser,
-      submitUserForm: this.submitUserForm,
-    });
+    const { user } = this.props;
     return (
       <div className="app">
-        {signoutButton}
-        {childrenWithProps}
+        <h1>{`This is the App, ${user.name}`}</h1>
+        {this.props.children}
       </div>
     );
   }
