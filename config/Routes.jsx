@@ -9,10 +9,10 @@ const Routes = () => (
   <Router history={hashHistory} >
     <Route name="app" path="/" component={App} >
       <IndexRoute name="main" component={Main} />
-      <Route name="login" path="login" component={UserForm} />
-      <Route name="signup" path="signup" component={UserForm} />
-      <Route name="not-found" path="*" component={NotFound} />
     </Route>
+    <Route name="login" path="/login" component={UserForm} />
+    <Route name="signup" path="/signup" component={UserForm} />
+    <Route name="not-found" path="*" component={NotFound} />
   </Router>
 );
 
