@@ -1,14 +1,27 @@
 const initialState = {
-  id: null,
-  email: null,
-  name: null,
-  password: null,
+  users: [],
+  userRequestInProgress: false,
+  userErrors: [],
 };
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case 'SET_USER_NAME': {
-      return { ...state, name: action.payload };
+    case 'FETCH_USERS_PENDING': {
+      return { ...state, userRequestInProgress: true };
+    }
+    case 'FETCH_USERS_FULFILLED': {
+      return {
+        ...state,
+        userRequestInProgress: false,
+        users: action.payload.data,
+      };
+    }
+    case 'FETCH_USERS_REJECTED': {
+      return {
+        ...state,
+        userRequestInProgress: false,
+        userErrors: action.payload,
+      };
     }
   }
   return state;

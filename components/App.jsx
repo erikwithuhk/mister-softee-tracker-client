@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import request from 'superagent';
 
-import { setUserName } from '../actions/userActions';
 import { login, logOut } from '../actions/authActions';
+import { fetchUsers } from '../actions/userActions';
 
 const propTypes = {
   children: React.PropTypes.element,
@@ -11,8 +11,8 @@ const propTypes = {
 
 @connect((store) => {
   return {
-    user: store.user,
-    session: store.session,
+    session: store.session.session,
+    user: store.users,
   };
 })
 
@@ -20,24 +20,28 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
+    this.fetchUsers = this.fetchUsers.bind(this);
   }
   componentDidMount() {
     const user = {
-      email: 'efjonsson@gmail.com',
+      email: 'test@test.com',
       password: 'password',
     };
     this.props.dispatch(login(user));
-    this.props.dispatch(setUserName('Erik'));
   }
   logOut() {
     this.props.dispatch(logOut());
   }
+  fetchUsers() {
+    this.props.dispatch(fetchUsers());
+  }
   render() {
-    const { user } = this.props;
+    const { session } = this.props;
     return (
       <div className="app">
-        <h1>{`This is the App, ${user.name}`}</h1>
+        <h1>{`This is the App, ${session.email}`}</h1>
         <button onClick={this.logOut}>Log out</button>
+        <button onClick={this.fetchUsers}>Fetch users</button>
         {this.props.children}
       </div>
     );

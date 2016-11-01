@@ -1,9 +1,11 @@
 const initialState = {
   authRequestInProgress: false,
   authErrors: [],
-  authToken: null,
-  email: null,
-  userID: null,
+  session: {
+    authToken: null,
+    email: null,
+    userID: null,
+  },
 };
 
 export default function reducer(state = initialState, action) {
@@ -16,22 +18,28 @@ export default function reducer(state = initialState, action) {
         ...state,
         authRequestInProgress: false,
         authErrors: [],
-        authToken: action.payload.auth_token,
-        email: action.payload.email || 'efjonsson@gmail.com',
+        session: {
+          ...state.session,
+          authToken: action.payload.auth_token,
+          email: action.payload.user.email,
+          userID: action.payload.user.id,
+        },
       };
     }
     case 'LOGIN_REQUEST_REJECTED': {
       return { ...state, authRequestInProgress: false, authErrors: action.payload };
     }
     case 'LOG_OUT': {
-      console.log('log out');
       return {
         ...state,
         authRequestInProgress: false,
         authErrors: [],
-        authToken: null,
-        email: null,
-        userID: null,
+        session: {
+          ...state.session,
+          authToken: null,
+          email: null,
+          userID: null,
+        }
       };
     }
   }

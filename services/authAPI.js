@@ -1,13 +1,12 @@
-import request from 'superagent';
+import axios from 'axios';
 
-const loginPath = 'api/authenticate';
+const loginPath = 'http://localhost:3000/api/v1/authenticate';
 
 class AuthApi {
   static login({ email, password }) {
-    return request.post(loginPath)
-                  .send({ email, password })
-                  .then(response => response.body)
-                  .catch(err => err);
+    return axios.post(loginPath, { user: { email, password } })
+                .then(response => response.data)
+                .catch(err => err);
   }
 }
 
