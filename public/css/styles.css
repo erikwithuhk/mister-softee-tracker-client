@@ -56,7 +56,7 @@ body {
   font: normal 16px 'Quicksand', sans-serif;
 }
 
-.app {
+.container {
   display: -webkit-flex;
   display: flex;
   -webkit-flex-direction: column;
@@ -73,6 +73,69 @@ header {
   flex: 1;
   width: 100%;
   z-index: 1;
+}
+
+main {
+  -webkit-flex: 7;
+          flex: 7;
+}
+
+form {
+  display: -webkit-flex;
+  display: flex;
+  -wekbit-flex-direction: column;
+          flex-direction: column;
+  -webkit-justify-content: center;
+          justify-content: center;
+  margin: 0 auto;
+  width: 80%;
+  height: 100%;
+}
+
+label {
+  font-weight: bold;
+  margin: 1em 0 0.5em;
+  text-align: center;
+}
+
+input {
+  border-radius: 5px;
+  display: block;
+  font: inherit;
+  padding: 0.75em;
+  width: 100%;
+  border: 2px solid #baa898;
+}
+
+button,
+input[type=submit] {
+  background-color: #d05879;
+  border: none;
+  color: #fff;
+  margin: 2em auto;
+  padding: 1em;
+}
+
+.bottom-button {
+  background-color: #d05879;
+  color: #fff;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  -webkit-flex: 1;
+          flex: 1;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+.primary-cta {
+  font-size: 1.5rem;
+}
+
+.secondary-cta {
+  font-size: 1rem;
 }
 
 
@@ -142,8 +205,8 @@ p.bottom-nav_label {
 5. Map
 ======================= */
 
-.map {
-  flex: 7;
+section.map {
+  height: 100%;
 }
 
 div.map--loading {
@@ -155,6 +218,7 @@ div.map--loading {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 div.map--loading p {

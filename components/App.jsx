@@ -20,19 +20,26 @@ const propTypes = {
 
 class App extends Component {
   render() {
-    const { children, route, session } = this.props;
+    const { children, location, route, session } = this.props;
 
     let signedInNav;
     if (session.authToken) {
       signedInNav = (<BottomNav routePath={route.path} />);
     } else {
-      signedInNav = (<Link to="/signup">Create an account </Link>);
+      signedInNav = (
+          <Link to="/signup" className="bottom-button">
+            <p className="primary-cta">Create an account</p>
+            <p className="secondary-cta">or log in</p>
+          </Link>
+      );
     }
 
     return (
-      <div className="app">
-        <TopNav />
-        {children}
+      <div className="container">
+        <TopNav page={!session.authToken ? 'Mister Softee Tracker' : location.pathname} />
+        <main>
+          {children}
+        </main>
         {signedInNav}
       </div>
     );

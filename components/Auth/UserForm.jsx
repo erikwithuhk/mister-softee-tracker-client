@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { hashHistory, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
+import TopNav from '..//navs/TopNav.jsx';
+
 import { signup, login } from '../../actions/authActions';
 
 const propTypes = {
@@ -46,13 +48,11 @@ class UserForm extends Component {
   }
   render() {
     const { email, password } = this.state;
-    const { path } = this.props.route;
-    const pageTitle = path === 'signup' ? 'Create an Account' : 'Log In';
+    const { location, route } = this.props;
+    const pageTitle = route.path === '/signup' ? 'Create an Account' : 'Log In';
     return (
-      <div>
-        <header>
-          <h2>{pageTitle}</h2>
-        </header>
+      <div className="container">
+        <TopNav page={location.pathname} />
         <main>
           <form onSubmit={this.handleSubmit}>
             <label htmlFor="email" >Email</label>
@@ -71,7 +71,7 @@ class UserForm extends Component {
             />
             <input
               type="submit"
-              value={path === 'login' ? 'Log in' : 'Create an account'}
+              value={route.path === '/signup' ? 'Create an account' : 'Log in'}
             />
           </form>
         </main>
