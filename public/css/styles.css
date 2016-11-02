@@ -21,7 +21,8 @@ TABLE OF CONTENTS
 }
 
 html,
-body {
+body,
+.root {
   height: 100%;
 }
 
@@ -51,14 +52,50 @@ Black Olive:     3a3a3a
 3. Global Styles
 ======================= */
 
+body {
+  font: normal 16px 'Quicksand', sans-serif;
+}
+
+.app {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  height: 100%;
+}
+
 
 
 /* =======================
 4. Navs
 ======================= */
 
+header {
+  background-color: #3a3a3a;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+}
+
+header h2 {
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.bottom-nav {
+  border-top: 5px solid #baa898;
+  flex: 1;
+}
+
 
 
 /* =======================
 5. Map
 ======================= */
+
+.map {
+  flex: 7;
+}

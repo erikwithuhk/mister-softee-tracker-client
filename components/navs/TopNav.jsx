@@ -9,7 +9,8 @@ class TopNav extends Component {
   render() {
     return (
       <header>
-        <Link to="/"><h1>Mister Softee Tracker</h1></Link>
+        {/* <Link to="/"><h1>Mister Softee Tracker</h1></Link> */}
+        <h2>Map</h2>
       </header>
     );
   }

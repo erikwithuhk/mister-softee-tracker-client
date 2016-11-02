@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router';
 // import { connect } from 'react-redux';
 import TopNav from './navs/TopNav.jsx';
+import BottomNav from './navs/BottomNav.jsx';
 
 // import { logOut } from '../actions/authActions';
 
@@ -20,6 +21,8 @@ class App extends Component {
     return (
       <div className="app">
         <TopNav />
+        <div className="map" />
+        <BottomNav />
       </div>
     );
   }
