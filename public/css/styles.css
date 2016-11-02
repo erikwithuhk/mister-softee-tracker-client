@@ -72,9 +72,9 @@ body {
 
 header,
 nav.bottom-nav {
-  -webkit-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
+  /*-webkit-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
      -moz-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
-          box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
+          box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);*/
 }
 
 header {
@@ -85,6 +85,7 @@ header {
   justify-content: center;
   flex: 1;
   width: 100%;
+  z-index: 1;
 }
 
 header h2 {
