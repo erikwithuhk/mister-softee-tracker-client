@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { GoogleMap, Marker, SearchBox } from 'react-google-maps';
 
 import TopNav from './navs/TopNav.jsx';
-import Map from './map.jsx';
+import Map from './Map.jsx';
 import BottomNav from './navs/bottomNav.jsx';
 
 // import { logOut } from '../actions/authActions';

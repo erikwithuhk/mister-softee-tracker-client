@@ -139,3 +139,18 @@ p.bottom-nav_label {
 .map {
   flex: 7;
 }
+
+div.map--loading {
+  background-color: #eee0cb;
+  color: #3a3a3a;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+div.map--loading p {
+  margin: 0 0 2em;
+}

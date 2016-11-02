@@ -29,7 +29,12 @@ class Map extends Component {
   }
   render() {
     if (!this.state.position) {
-      return (<div className="map">Map loading...</div>);
+      return (
+        <div className="map map--loading">
+          <p>Getting your location</p>
+          <Icon pulse name="spinner" size="5x" />
+        </div>
+      );
     }
     return (
       <GoogleMapLoader
@@ -41,29 +46,30 @@ class Map extends Component {
         }
         googleMapElement={
           <GoogleMap
-            defaultZoom={12}
-            // defaultCenter={this.state.position}
+            defaultZoom={15}
             center={this.state.position}
           >
             <Marker
-              position={this.state.position}
+              anchorPoint={new google.maps.Point(50, 32)}
               icon={{
-                url: 'http://simpleicon.com/wp-content/uploads/user1.svg',
-                scaledSize: new google.maps.Size(32, 32),
+                url: '../images/mister-softee-tracker_current-location-dot.svg',
+                scaledSize: new google.maps.Size(64, 64),
               }}
+              opacity={0.75}
+              position={this.state.position}
             />
             <Marker
               position={{ lat: 40.671, lng: -73.962 }}
               icon={{
-                url: 'http://www.misskatecuttables.com/uploads/shopping_cart/7520/large_ice-cream-truck.png',
-                scaledSize: new google.maps.Size(32, 32),
+                url: '../images/mister-softee-tracker_truck-icon.svg',
+                scaledSize: new google.maps.Size(50, 32),
               }}
             />
             <Marker
               position={{ lat: 40.681, lng: -73.952 }}
               icon={{
-                url: 'http://www.misskatecuttables.com/uploads/shopping_cart/7520/large_ice-cream-truck.png',
-                scaledSize: new google.maps.Size(32, 32),
+                url: '../images/mister-softee-tracker_truck-icon.svg',
+                scaledSize: new google.maps.Size(50, 32),
               }}
             />
           </GoogleMap>
