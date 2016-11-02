@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { hashHistory, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
-import TopNav from '..//navs/TopNav.jsx';
+import TopNav from '../navs/TopNav.jsx';
 
 import { signup, login } from '../../actions/authActions';
 
@@ -13,7 +13,9 @@ const propTypes = {
 };
 
 @connect((store) => {
-  return {};
+  return {
+    session: store.session.session,
+  };
 })
 
 class UserForm extends Component {
@@ -36,11 +38,12 @@ class UserForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { path } = this.props.route;
-    if (path === 'login') {
+    console.log(path);
+    if (path === '/login') {
       this.props.dispatch(login(this.state));
       this.setState({ email: '', password: '' });
       hashHistory.push('/');
-    } else if (path === 'signup') {
+    } else if (path === '/signup') {
       this.props.dispatch(signup(this.state));
       this.setState({ email: '', password: '' });
       hashHistory.push('/');

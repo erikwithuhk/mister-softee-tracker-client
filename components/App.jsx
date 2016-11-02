@@ -6,6 +6,8 @@ import { GoogleMap, Marker, SearchBox } from 'react-google-maps';
 import TopNav from './navs/TopNav.jsx';
 import BottomNav from './navs/bottomNav.jsx';
 
+// import { signup, login } from '../../actions/authActions';
+
 const propTypes = {
   children: React.PropTypes.element,
   route: React.PropTypes.object,

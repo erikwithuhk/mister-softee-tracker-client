@@ -8,7 +8,6 @@ const propTypes = {
 class TopNav extends Component {
   render() {
     const { page } = this.props;
-    console.log(page);
     let pageTitle;
     switch (page) {
       case '/': {
