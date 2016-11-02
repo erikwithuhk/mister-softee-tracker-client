@@ -1,28 +1,48 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Link } from 'react-router';
 
 const propTypes = {
-
+  routePath: React.PropTypes.string,
 };
 
-class BottomNav extends Component {
-  render() {
-    return (
-      <div className="bottom-nav">
-        <Link to="/" className="bottom-nav_item">
-          <p>Map</p>
-        </Link>
-        <Link to="/" className="bottom-nav_item">
-          <p>Request</p>
-        </Link>
-        <Link to="/" className="bottom-nav_item">
-          <p>Account</p>
-        </Link>
-      </div>
-    );
+const bottomNav = ({ routePath }) => {
+  let mapSelected = '';
+  let requestSelected = '';
+  let accountSelected = '';
+
+  const selectedClassName = 'bottom-nav_item--selected';
+  switch (routePath) {
+    case '/': {
+      mapSelected = selectedClassName;
+      break;
+    }
+    case '/request': {
+      requestSelected = selectedClassName;
+      break;
+    }
+    case '/account': {
+      accountSelected = selectedClassName;
+      break;
+    }
+    default: {
+      break;
+    }
   }
-}
+  return (
+    <nav className="bottom-nav">
+      <Link to="/" className={`bottom-nav_item ${mapSelected}`}>
+        <p>Map</p>
+      </Link>
+      <Link to="/" className={`bottom-nav_item ${requestSelected}`}>
+        <p>Request</p>
+      </Link>
+      <Link to="/" className={`bottom-nav_item ${accountSelected}`}>
+        <p>Account</p>
+      </Link>
+    </nav>
+  );
+};
 
-BottomNav.propTypes = propTypes;
+bottomNav.propTypes = propTypes;
 
-export default BottomNav;
+export default bottomNav;

@@ -85,9 +85,29 @@ header h2 {
   text-align: center;
 }
 
-.bottom-nav {
+nav.bottom-nav {
   border-top: 5px solid #baa898;
-  flex: 1;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex: 1;
+          flex: 1;
+  justify-content: space-around;
+  align-items: center;
+}
+
+a.bottom-nav_item {
+  color: #baa898;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+a.bottom-nav_item:hover {
+  color: #2c58c8;
+}
+
+a.bottom-nav_item--selected {
+  color: #d05879;
 }
 
 

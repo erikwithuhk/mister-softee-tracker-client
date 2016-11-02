@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router';
 // import { connect } from 'react-redux';
 import TopNav from './navs/TopNav.jsx';
-import BottomNav from './navs/BottomNav.jsx';
+import BottomNav from './navs/bottomNav.jsx';
 
 // import { logOut } from '../actions/authActions';
 
 const propTypes = {
-
+  route: React.PropTypes.object,
 };
 
 // @connect((store) => {
@@ -22,7 +22,7 @@ class App extends Component {
       <div className="app">
         <TopNav />
         <div className="map" />
-        <BottomNav />
+        <BottomNav routePath={this.props.route.path} />
       </div>
     );
   }
