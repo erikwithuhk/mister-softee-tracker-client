@@ -47,27 +47,35 @@ class UserForm extends Component {
   render() {
     const { email, password } = this.state;
     const { path } = this.props.route;
+    const pageTitle = path === 'signup' ? 'Create an Account' : 'Log In';
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label htmlFor="email" >Email</label>
-        <input
-          name="email"
-          type="email"
-          value={email}
-          onChange={this.handleChange}
-        />
-        <label htmlFor="password" >Password</label>
-        <input
-          name="password"
-          type="password"
-          value={password}
-          onChange={this.handleChange}
-        />
-        <input
-          type="submit"
-          value={path === 'login' ? 'Log in' : 'Create an account'}
-        />
-      </form>
+      <div>
+        <header>
+          <h2>{pageTitle}</h2>
+        </header>
+        <main>
+          <form onSubmit={this.handleSubmit}>
+            <label htmlFor="email" >Email</label>
+            <input
+              name="email"
+              type="email"
+              value={email}
+              onChange={this.handleChange}
+            />
+            <label htmlFor="password" >Password</label>
+            <input
+              name="password"
+              type="password"
+              value={password}
+              onChange={this.handleChange}
+            />
+            <input
+              type="submit"
+              value={path === 'login' ? 'Log in' : 'Create an account'}
+            />
+          </form>
+        </main>
+      </div>
     );
   }
 }

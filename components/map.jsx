@@ -10,16 +10,14 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // position: {
-      //   lat: 40.678,
-      //   lng: -73.944,
-      // },
+
     };
   }
   componentDidMount() {
-    setInterval(() => {
-      this.getUserPosition();
-    }, 500);
+    this.startPositionInterval();
+  }
+  componentWillUnmount() {
+    this.clearPositionInterval();
   }
   getUserPosition() {
     if (navigator.geolocation) {
@@ -28,6 +26,13 @@ class Map extends Component {
         this.setState({ position: { lat: latitude, lng: longitude } });
       });
     }
+  }
+  startPositionInterval() {
+    const getUserPosition = setInterval(() => this.getUserPosition(), 500);
+    this.setState({ userPositionIntervalID: getUserPosition });
+  }
+  clearPositionInterval() {
+    clearInterval(this.state.userPositionIntervalID);
   }
   render() {
     if (!this.state.position) {

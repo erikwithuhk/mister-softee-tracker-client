@@ -36,11 +36,11 @@ const bottomNav = ({ routePath }) => {
         <Icon className="bottom-nav_icon" name="map-o" />
         <p className="bottom-nav_label" >Map</p>
       </Link>
-      <Link to="/" className={`bottom-nav_item ${requestSelected}`}>
+      <Link to="/request" className={`bottom-nav_item ${requestSelected}`}>
         <Icon className="bottom-nav_icon" name="hand-o-up" />
         <p className="bottom-nav_label" >Request</p>
       </Link>
-      <Link to="/" className={`bottom-nav_item ${accountSelected}`}>
+      <Link to="/account" className={`bottom-nav_item ${accountSelected}`}>
         <Icon className="bottom-nav_icon" name="user-o" />
         <p className="bottom-nav_label" >Account</p>
       </Link>

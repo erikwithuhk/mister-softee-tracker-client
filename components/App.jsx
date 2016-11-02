@@ -1,32 +1,39 @@
 import React, { Component } from 'react';
-// import { Link } from 'react-router';
-// import { connect } from 'react-redux';
+import { Link } from 'react-router';
+import { connect } from 'react-redux';
 import { GoogleMap, Marker, SearchBox } from 'react-google-maps';
 
 import TopNav from './navs/TopNav.jsx';
-import Map from './Map.jsx';
 import BottomNav from './navs/bottomNav.jsx';
 
-// import { logOut } from '../actions/authActions';
-
 const propTypes = {
+  children: React.PropTypes.element,
   route: React.PropTypes.object,
+  session: React.PropTypes.object,
 };
 
-// @connect((store) => {
-//   return {
-//     session: store.session.session,
-//   };
-// })
+@connect((store) => {
+  return {
+    session: store.session.session,
+  };
+})
 
 class App extends Component {
   render() {
+    const { children, route, session } = this.props;
+
+    let signedInNav;
+    if (session.authToken) {
+      signedInNav = (<BottomNav routePath={route.path} />);
+    } else {
+      signedInNav = (<Link to="/signup">Create an account </Link>);
+    }
+
     return (
       <div className="app">
         <TopNav />
-        <Map />
-        {/* <div className="map" /> */}
-        <BottomNav routePath={this.props.route.path} />
+        {children}
+        {signedInNav}
       </div>
     );
   }

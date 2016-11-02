@@ -64,19 +64,6 @@ body {
   height: 100%;
 }
 
-
-
-/* =======================
-4. Navs
-======================= */
-
-header,
-nav.bottom-nav {
-  /*-webkit-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
-     -moz-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
-          box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);*/
-}
-
 header {
   background-color: #3a3a3a;
   color: #fff;
@@ -87,6 +74,13 @@ header {
   width: 100%;
   z-index: 1;
 }
+
+
+
+
+/* =======================
+4. Navs
+======================= */
 
 div.logo_icon {
   background: url(../images/mister-softee-tracker_logo_RGB_cone.png) no-repeat center center;
