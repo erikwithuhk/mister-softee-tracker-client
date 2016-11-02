@@ -17,7 +17,9 @@ class Map extends Component {
     };
   }
   componentDidMount() {
-    this.getUserPosition();
+    setInterval(() => {
+      this.getUserPosition();
+    }, 500);
   }
   getUserPosition() {
     if (navigator.geolocation) {
@@ -47,7 +49,7 @@ class Map extends Component {
         googleMapElement={
           <GoogleMap
             defaultZoom={15}
-            center={this.state.position}
+            defaultCenter={this.state.position}
           >
             <Marker
               anchorPoint={new google.maps.Point(50, 32)}

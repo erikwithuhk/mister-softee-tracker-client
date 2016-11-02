@@ -9,8 +9,10 @@ class TopNav extends Component {
   render() {
     return (
       <header>
-        {/* <Link to="/"><h1>Mister Softee Tracker</h1></Link> */}
-        <h2>Map</h2>
+        {/* <div className="flex-container"> */}
+          <Link to="/"><div className="logo_icon" /></Link>
+          <h2>Map</h2>
+        {/* </div> */}
       </header>
     );
   }

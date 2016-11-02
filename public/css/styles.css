@@ -88,9 +88,21 @@ header {
   z-index: 1;
 }
 
+div.logo_icon {
+  background: url(../images/mister-softee-tracker_logo_RGB_cone.png) no-repeat center center;
+  background-size: contain;
+  float: left;
+  margin: 0 0.5rem;
+  padding-bottom: 13%;
+  width: 13%;
+}
+
 header h2 {
   font-size: 1.5rem;
+  position: absolute;
+  left: 25%;
   text-align: center;
+  width: 50%;
 }
 
 nav.bottom-nav {
