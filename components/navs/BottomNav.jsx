@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import { Icon } from 'react-fa';
 
 const propTypes = {
   routePath: React.PropTypes.string,
@@ -28,16 +29,20 @@ const bottomNav = ({ routePath }) => {
       break;
     }
   }
+
   return (
     <nav className="bottom-nav">
       <Link to="/" className={`bottom-nav_item ${mapSelected}`}>
-        <p>Map</p>
+        <Icon className="bottom-nav_icon" name="map-o" />
+        <p className="bottom-nav_label" >Map</p>
       </Link>
       <Link to="/" className={`bottom-nav_item ${requestSelected}`}>
-        <p>Request</p>
+        <Icon className="bottom-nav_icon" name="hand-o-up" />
+        <p className="bottom-nav_label" >Request</p>
       </Link>
       <Link to="/" className={`bottom-nav_item ${accountSelected}`}>
-        <p>Account</p>
+        <Icon className="bottom-nav_icon" name="user-o" />
+        <p className="bottom-nav_label" >Account</p>
       </Link>
     </nav>
   );

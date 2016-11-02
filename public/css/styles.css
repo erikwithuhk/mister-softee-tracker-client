@@ -70,6 +70,13 @@ body {
 4. Navs
 ======================= */
 
+header,
+nav.bottom-nav {
+  -webkit-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
+     -moz-box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
+          box-shadow: 0px 7px 17px 0px rgba(58,58,58,0.41);
+}
+
 header {
   background-color: #3a3a3a;
   color: #fff;
@@ -86,13 +93,14 @@ header h2 {
 }
 
 nav.bottom-nav {
-  border-top: 5px solid #baa898;
+  border-top: 2px solid #baa898;
   display: -webkit-flex;
   display: flex;
   -webkit-flex: 1;
           flex: 1;
   justify-content: space-around;
   align-items: center;
+  padding: 0.25rem;
 }
 
 a.bottom-nav_item {
@@ -108,6 +116,17 @@ a.bottom-nav_item:hover {
 
 a.bottom-nav_item--selected {
   color: #d05879;
+}
+
+span.bottom-nav_icon {
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 0.25em 0;
+  display: block;
+}
+
+p.bottom-nav_label {
+  font-size: 0.75rem;
 }
 
 
