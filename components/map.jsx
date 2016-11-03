@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
 import { updatePosition } from '../actions/userActions';
+import { addMarker } from '../actions/mapActions';
 import { fetchVendors } from '../actions/vendorActions';
 
 const propTypes = {
@@ -13,6 +14,7 @@ const propTypes = {
   return {
     session: store.session.session,
     position: store.user.position,
+    markers: store.map.markers,
     vendors: store.vendor.vendors,
   };
 })
@@ -23,12 +25,6 @@ class Map extends Component {
     this.state = {
       mapRendered: false,
       position: null,
-      vendorPositions: [
-        { lat: 40.671, lng: -73.962 },
-        { lat: 40.681, lng: -73.952 },
-        { lat: 40.631, lng: -73.982 },
-        { lat: 40.651, lng: -73.992 },
-      ],
     };
   }
   componentDidMount() {
@@ -56,7 +52,7 @@ class Map extends Component {
     const getPositions = setInterval(() => {
       this.getUserPosition()
       this.props.dispatch(fetchVendors());
-      this.createVendorLocationMarkers();
+      this.getMarkers();
     }, 1000);
     this.setState({ positionIntervalID: getPositions });
   }
@@ -69,6 +65,7 @@ class Map extends Component {
       center: this.state.position,
       draggable: true,
     });
+    this.markers = {};
     this.createCurrentLocationMarker();
     this.setState({ mapRendered: true });
   }
@@ -84,20 +81,24 @@ class Map extends Component {
       opacity: 0.75,
     });
   }
-  createVendorLocationMarkers() {
+  getMarkers() {
     this.props.vendors.forEach((vendor) => {
-      new google.maps.Marker({
-        map: this.map,
-        position: {
-          lat: vendor.position_lat,
-          lng: vendor.position_lng,
-        },
-        anchorPoint: new google.maps.Point(0, 0),
-        icon: {
-          url: '../images/mister-softee-tracker_truck-icon.svg',
-          scaledSize: new google.maps.Size(50, 32),
-        },
-      });
+      if(this.markers.hasOwnProperty(vendor.id)) {
+        this.markers[vendor.id].setPosition(new google.maps.LatLng(vendor.position_lat,vendor.position_lng));
+      } else {
+        const marker = new google.maps.Marker({
+          map: this.map,
+          anchorPoint: new google.maps.Point(0, 0),
+          position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
+          title: `${vendor.id}`,
+          icon: {
+            url: '../images/mister-softee-tracker_truck-icon.svg',
+            scaledSize: new google.maps.Size(50, 32),
+          },
+        });
+        const { id } = vendor;
+        this.props.dispatch(addMarker({ id, marker }));
+      }
     });
   }
   recenterMap() {
