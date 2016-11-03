@@ -53,7 +53,7 @@ class Map extends Component {
         }
         googleMapElement={
           <GoogleMap
-            defaultZoom={15}
+            defaultZoom={12}
             defaultCenter={this.state.position}
           >
             <Marker
@@ -74,6 +74,20 @@ class Map extends Component {
             />
             <Marker
               position={{ lat: 40.681, lng: -73.952 }}
+              icon={{
+                url: '../images/mister-softee-tracker_truck-icon.svg',
+                scaledSize: new google.maps.Size(50, 32),
+              }}
+            />
+            <Marker
+              position={{ lat: 40.631, lng: -73.982 }}
+              icon={{
+                url: '../images/mister-softee-tracker_truck-icon.svg',
+                scaledSize: new google.maps.Size(50, 32),
+              }}
+            />
+            <Marker
+              position={{ lat: 40.651, lng: -73.992 }}
               icon={{
                 url: '../images/mister-softee-tracker_truck-icon.svg',
                 scaledSize: new google.maps.Size(50, 32),

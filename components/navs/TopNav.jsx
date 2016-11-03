@@ -14,6 +14,10 @@ class TopNav extends Component {
         pageTitle = 'Map';
         break;
       }
+      case '/account': {
+        pageTitle = 'Account';
+        break;
+      }
       case '/login': {
         pageTitle = 'Log In';
         break;
