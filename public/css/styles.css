@@ -5,6 +5,8 @@ TABLE OF CONTENTS
 3. Global Styles
 4. Navs
 5. Map
+6. Account
+7. User Form
 #. Media Queries
 ======================= */
 
@@ -64,6 +66,17 @@ body {
   height: 100%;
 }
 
+a {
+  color: #d05879;
+  text-decoration: underline;
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+  color: #2c58c8;
+  text-decoration: none;
+}
+
 header {
   background-color: #3a3a3a;
   color: #fff;
@@ -111,9 +124,12 @@ button,
 input[type=submit] {
   background-color: #d05879;
   border: none;
+  border-bottom: 3px solid #9C425B;
+  cursor: pointer;
+  font: inherit;
   color: #fff;
   margin: 2em auto;
-  padding: 1em;
+  padding: 1em 2em;
 }
 
 .bottom-button {
@@ -128,6 +144,10 @@ input[type=submit] {
   align-items: center;
   text-align: center;
   text-decoration: none;
+}
+
+.bottom-button:hover {
+  color: #fff;
 }
 
 .primary-cta {
@@ -188,6 +208,11 @@ a.bottom-nav_item--selected {
   color: #d05879;
 }
 
+a.bottom-nav_item--selected:hover {
+  color: #d05879;
+  cursor: default;
+}
+
 span.bottom-nav_icon {
   text-align: center;
   font-size: 1.5rem;
@@ -223,4 +248,42 @@ div.map--loading {
 
 div.map--loading p {
   margin: 0 0 2em;
+}
+
+
+
+/* =======================
+6. Account
+======================= */
+
+section.account-container {
+  background-color: #eee0cb;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+}
+
+button.signout-button {
+  border-radius: 5px;
+}
+
+
+
+/* =======================
+7. User Form
+======================= */
+
+
+section.user-form-container {
+  background-color: #eee0cb;
+  height: 100%;
+}
+
+a.switch-user-form {
+  color: #d05879;
+  text-align: center;
 }

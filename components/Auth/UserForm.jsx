@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { hashHistory, withRouter } from 'react-router';
+import { Link, hashHistory, withRouter } from 'react-router';
 import { connect } from 'react-redux';
 
 import TopNav from '../navs/TopNav.jsx';
@@ -52,31 +52,48 @@ class UserForm extends Component {
   render() {
     const { email, password } = this.state;
     const { location, route } = this.props;
-    const pageTitle = route.path === '/signup' ? 'Create an Account' : 'Log In';
+
+    let pageTitle;
+    let oppositePageTitle;
+    let oppositePageLink;
+    if (route.path === '/signup') {
+      pageTitle = 'Create an account';
+      oppositePageTitle = 'log in';
+      oppositePageLink = '/login';
+    } else if (route.path === '/login') {
+      pageTitle = 'Log in';
+      oppositePageTitle = 'create an account';
+      oppositePageLink = '/signup';
+    }
     return (
       <div className="container">
         <TopNav page={location.pathname} />
         <main>
-          <form onSubmit={this.handleSubmit}>
-            <label htmlFor="email" >Email</label>
-            <input
-              name="email"
-              type="email"
-              value={email}
-              onChange={this.handleChange}
-            />
-            <label htmlFor="password" >Password</label>
-            <input
-              name="password"
-              type="password"
-              value={password}
-              onChange={this.handleChange}
-            />
-            <input
-              type="submit"
-              value={route.path === '/signup' ? 'Create an account' : 'Log in'}
-            />
-          </form>
+          <section className="user-form-container">
+            <form className="user-form" onSubmit={this.handleSubmit}>
+              <label htmlFor="email" >Email</label>
+              <input
+                name="email"
+                type="email"
+                value={email}
+                onChange={this.handleChange}
+              />
+              <label htmlFor="password" >Password</label>
+              <input
+                name="password"
+                type="password"
+                value={password}
+                onChange={this.handleChange}
+              />
+              <input
+                type="submit"
+                value={pageTitle}
+              />
+              <Link to={oppositePageLink} className="switch-user-form" >
+                {`Or ${oppositePageTitle}`}
+              </Link>
+            </form>
+          </section>
         </main>
       </div>
     );
