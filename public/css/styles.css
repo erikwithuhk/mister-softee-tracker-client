@@ -234,7 +234,7 @@ section.map {
   height: 100%;
 }
 
-div.map--loading {
+section.map--loading {
   background-color: #eee0cb;
   color: #3a3a3a;
   display: -webkit-flex;
@@ -246,9 +246,10 @@ div.map--loading {
   height: 100%;
 }
 
-div.map--loading p {
+section.map--loading p {
   margin: 0 0 2em;
 }
+
 
 
 
