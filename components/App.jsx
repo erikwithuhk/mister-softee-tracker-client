@@ -20,11 +20,11 @@ const propTypes = {
 
 class App extends Component {
   render() {
-    const { children, location, route, session } = this.props;
+    const { children, location, session } = this.props;
 
     let signedInNav;
     if (session.authToken) {
-      signedInNav = (<BottomNav routePath={route.path} />);
+      signedInNav = (<BottomNav pathname={location.pathname} />);
     } else {
       signedInNav = (
           <Link to="/signup" className="bottom-button">

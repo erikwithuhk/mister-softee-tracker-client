@@ -3,16 +3,16 @@ import { Link } from 'react-router';
 import { Icon } from 'react-fa';
 
 const propTypes = {
-  routePath: React.PropTypes.string,
+  pathname: React.PropTypes.string,
 };
 
-const bottomNav = ({ routePath }) => {
+const bottomNav = ({ pathname }) => {
   let mapSelected = '';
   let requestSelected = '';
   let accountSelected = '';
 
   const selectedClassName = 'bottom-nav_item--selected';
-  switch (routePath) {
+  switch (pathname) {
     case '/': {
       mapSelected = selectedClassName;
       break;

@@ -56,7 +56,8 @@ class Map extends Component {
     const getPositions = setInterval(() => {
       this.getUserPosition()
       this.props.dispatch(fetchVendors());
-    }, 500);
+      this.createVendorLocationMarkers();
+    }, 1000);
     this.setState({ positionIntervalID: getPositions });
   }
   clearPositionInterval() {
@@ -66,9 +67,9 @@ class Map extends Component {
     this.map = new google.maps.Map(document.querySelector('.map'), {
       zoom: 13,
       center: this.state.position,
+      draggable: true,
     });
     this.createCurrentLocationMarker();
-    this.createVendorLocationMarkers();
     this.setState({ mapRendered: true });
   }
   createCurrentLocationMarker() {

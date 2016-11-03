@@ -120,6 +120,40 @@ input {
   border: 2px solid #baa898;
 }
 
+input[type=checkbox] {
+  border: none;
+  display: inline-block;
+  height: 2em;
+  width: 2em;
+}
+
+label>input[type=checkbox]::before {
+  content: "\f096";
+  font-family: FontAwesome;
+  font-size: 2em;
+}
+
+label>input[type=checkbox]:checked::before {
+  content: "\f046";
+}
+
+.checkbox-label {
+  cursor: pointer;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+          flex-direction: row;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-align-items: center;
+          align-items: center;
+}
+
+.checkbox-label_text {
+  display: inline-block;
+  margin-left: 1rem;
+}
+
 button,
 input[type=submit] {
   background-color: #d05879;

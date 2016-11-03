@@ -38,7 +38,6 @@ class UserForm extends Component {
   handleSubmit(e) {
     e.preventDefault();
     const { path } = this.props.route;
-    console.log(path);
     if (path === '/login') {
       this.props.dispatch(login(this.state));
       this.setState({ email: '', password: '' });
@@ -85,6 +84,15 @@ class UserForm extends Component {
                 value={password}
                 onChange={this.handleChange}
               />
+              <label className="checkbox-label" htmlFor="isVendor" >
+                <input
+                  name="isVendor"
+                  id="isVendor"
+                  type="checkbox"
+                  value="true"
+                />
+                <p className="checkbox-label_text">I am a Mister Softee truck driver</p>
+              </label>
               <input
                 type="submit"
                 value={pageTitle}
