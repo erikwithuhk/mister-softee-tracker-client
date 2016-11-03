@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
 import { updatePosition } from '../actions/userActions';
+import { fetchVendors } from '../actions/vendorActions';
 
 const propTypes = {
   // containerElementProps: React.PropTypes.object,
@@ -12,6 +13,7 @@ const propTypes = {
   return {
     session: store.session.session,
     position: store.user.position,
+    vendors: store.vendor.vendors,
   };
 })
 
@@ -51,11 +53,14 @@ class Map extends Component {
     }
   }
   startPositionInterval() {
-    const getUserPosition = setInterval(() => this.getUserPosition(), 500);
-    this.setState({ userPositionIntervalID: getUserPosition });
+    const getPositions = setInterval(() => {
+      this.getUserPosition()
+      this.props.dispatch(fetchVendors());
+    }, 500);
+    this.setState({ positionIntervalID: getPositions });
   }
   clearPositionInterval() {
-    clearInterval(this.state.userPositionIntervalID);
+    clearInterval(this.state.positionIntervalID);
   }
   initializeMap() {
     this.map = new google.maps.Map(document.querySelector('.map'), {
@@ -79,10 +84,13 @@ class Map extends Component {
     });
   }
   createVendorLocationMarkers() {
-    this.state.vendorPositions.forEach((vendorPosition) => {
+    this.props.vendors.forEach((vendor) => {
       new google.maps.Marker({
         map: this.map,
-        position: vendorPosition,
+        position: {
+          lat: vendor.position_lat,
+          lng: vendor.position_lng,
+        },
         anchorPoint: new google.maps.Point(0, 0),
         icon: {
           url: '../images/mister-softee-tracker_truck-icon.svg',
@@ -107,58 +115,6 @@ class Map extends Component {
     }
     return (
       <section className="map" />
-      // <GoogleMapLoader
-      //   containerElement={
-      //     <section
-      //       className="map"
-      //       {...this.props.containerElementProps}
-      //     />
-      //   }
-      //   googleMapElement={
-      //     <GoogleMap
-      //       defaultZoom={12}
-      //       defaultCenter={this.state.position}
-      //     >
-      //       <Marker
-      //         anchorPoint={new google.maps.Point(50, 32)}
-      //         icon={{
-      //           url: '../images/mister-softee-tracker_current-location-dot.svg',
-      //           scaledSize: new google.maps.Size(64, 64),
-      //         }}
-      //         opacity={0.75}
-      //         position={this.state.position}
-      //       />
-      //       <Marker
-      //         position={{ lat: 40.671, lng: -73.962 }}
-      //         icon={{
-      //           url: '../images/mister-softee-tracker_truck-icon.svg',
-      //           scaledSize: new google.maps.Size(50, 32),
-      //         }}
-      //       />
-      //       <Marker
-      //         position={{ lat: 40.681, lng: -73.952 }}
-      //         icon={{
-      //           url: '../images/mister-softee-tracker_truck-icon.svg',
-      //           scaledSize: new google.maps.Size(50, 32),
-      //         }}
-      //       />
-      //       <Marker
-      //         position={{ lat: 40.631, lng: -73.982 }}
-      //         icon={{
-      //           url: '../images/mister-softee-tracker_truck-icon.svg',
-      //           scaledSize: new google.maps.Size(50, 32),
-      //         }}
-      //       />
-      //       <Marker
-      //         position={{ lat: 40.651, lng: -73.992 }}
-      //         icon={{
-      //           url: '../images/mister-softee-tracker_truck-icon.svg',
-      //           scaledSize: new google.maps.Size(50, 32),
-      //         }}
-      //       />
-      //     </GoogleMap>
-      //   }
-      // />
     );
   }
 }
