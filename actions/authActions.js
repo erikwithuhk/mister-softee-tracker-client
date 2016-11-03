@@ -1,9 +1,10 @@
 import AuthAPI from '../services/AuthAPI.js';
 
-export function signup({ email, password }) {
+export function signup({ email, password, isVendor }) {
+  const type = isVendor ? 'Vendor' : 'User';
   return {
     type: 'SIGNUP_REQUEST',
-    payload: AuthAPI.signup({ email, password }),
+    payload: AuthAPI.signup({ email, password, type }),
   };
 }
 
