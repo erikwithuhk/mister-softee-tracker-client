@@ -24,8 +24,10 @@ class UserForm extends Component {
     this.state = {
       email: '',
       password: '',
+      isVendor: false,
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleChange(e) {
@@ -34,6 +36,9 @@ class UserForm extends Component {
     const newState = {};
     newState[stateKey] = stateValue;
     this.setState(newState);
+  }
+  handleCheckboxChange(e) {
+    this.setState({ isVendor: e.target.checked });
   }
   handleSubmit(e) {
     e.preventDefault();
@@ -55,10 +60,23 @@ class UserForm extends Component {
     let pageTitle;
     let oppositePageTitle;
     let oppositePageLink;
+    let vendorCheckbox;
     if (route.path === '/signup') {
       pageTitle = 'Create an account';
       oppositePageTitle = 'log in';
       oppositePageLink = '/login';
+      vendorCheckbox = (
+        <label className="checkbox-label" htmlFor="isVendor" >
+          <input
+            name="isVendor"
+            id="isVendor"
+            type="checkbox"
+            value="true"
+            onChange={this.handleCheckboxChange}
+          />
+          <p className="checkbox-label_text">I am a Mister Softee truck driver</p>
+        </label>
+      );
     } else if (route.path === '/login') {
       pageTitle = 'Log in';
       oppositePageTitle = 'create an account';
@@ -84,15 +102,7 @@ class UserForm extends Component {
                 value={password}
                 onChange={this.handleChange}
               />
-              <label className="checkbox-label" htmlFor="isVendor" >
-                <input
-                  name="isVendor"
-                  id="isVendor"
-                  type="checkbox"
-                  value="true"
-                />
-                <p className="checkbox-label_text">I am a Mister Softee truck driver</p>
-              </label>
+              {vendorCheckbox}
               <input
                 type="submit"
                 value={pageTitle}
