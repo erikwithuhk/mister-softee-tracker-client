@@ -5,11 +5,21 @@ import store from '../store';
 const usersPath = 'http://localhost:3000/api/v1/users';
 
 export function fetchUsers() {
-  // const config = {
-  //   headers: { 'Authorization': `Bearer ${store.getState().session.session.authToken}` },
-  // };
   return {
     type: 'FETCH_USERS',
     payload: apiRequest.get(usersPath),
+  };
+}
+
+export function updatePosition({ userID, lat, lng }) {
+  console.log('test');
+  return {
+    type: 'UPDATE_POSITION',
+    payload: apiRequest.patch(`${usersPath}/${userID}`, {
+      user: {
+        position_lat: lat,
+        position_lng: lng,
+      },
+    }),
   };
 }

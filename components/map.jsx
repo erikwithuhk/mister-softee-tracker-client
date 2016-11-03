@@ -1,9 +1,19 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
+
+import { updatePosition } from '../actions/userActions';
 
 const propTypes = {
   // containerElementProps: React.PropTypes.object,
 };
+
+@connect((store) => {
+  return {
+    session: store.session.session,
+    position: store.user.position,
+  };
+})
 
 class Map extends Component {
   constructor(props) {
@@ -29,6 +39,13 @@ class Map extends Component {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
+        if (this.props.session.userID) {
+          this.props.dispatch(updatePosition({
+            userID: this.props.session.userID,
+            lat: latitude,
+            lng: longitude,
+          }));
+        }
         this.setState({ position: { lat: latitude, lng: longitude } });
       });
     }
