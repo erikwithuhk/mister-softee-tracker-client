@@ -22,14 +22,17 @@ const propTypes = {
 class Map extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       // mapRendered: false,
       // markers: {},
+      currentPositionMarker: null,
       position: null,
     };
+
     this.defaultCenter = new google.maps.LatLng(40.6782, -73.9442);
-    // this.defaultCenter = { lat: 40.6782, lng: -73.9442 };
     this.map = null;
+
     this.clearPositionInterval = this.clearPositionInterval.bind(this);
   }
   componentDidMount() {
@@ -37,7 +40,11 @@ class Map extends Component {
     this.state.intervalID = setInterval(() => {
       this.getUserPosition();
       if (this.map.getCenter() === this.defaultCenter && this.state.position) {
+        this.createCurrentPositionMarker();
         this.recenterMap();
+      }
+      if (this.state.currentPositionMarker) {
+        this.setCurrentPositionMarker();
       }
     }, 1000);
   }
@@ -68,21 +75,23 @@ class Map extends Component {
       center: this.defaultCenter,
       draggable: true,
     });
-    // this.createCurrentLocationMarker();
-    // this.setState({ mapRendered: true });
   }
-  // createCurrentLocationMarker() {
-  //   new google.maps.Marker({
-  //     map: this.map,
-  //     position: this.state.position,
-  //     anchorPoint: new google.maps.Point(0, 0),
-  //     icon: {
-  //       url: '../images/mister-softee-tracker_current-location-dot.svg',
-  //       scaledSize: new google.maps.Size(64, 64),
-  //     },
-  //     opacity: 0.75,
-  //   });
-  // }
+  createCurrentPositionMarker() {
+    const currentPositionMarker = new google.maps.Marker({
+      map: this.map,
+      position: this.state.position,
+      anchorPoint: new google.maps.Point(0, 0),
+      icon: {
+        url: '../images/mister-softee-tracker_current-location-dot.svg',
+        scaledSize: new google.maps.Size(64, 64),
+      },
+      opacity: 0.75,
+    });
+    this.setState({ currentPositionMarker });
+  }
+  setCurrentPositionMarker() {
+    this.state.currentPositionMarker.setPosition(this.state.position);
+  }
   // getMarkers() {
   //   this.props.vendors.forEach((vendor) => {
   //     if (this.state.markers.hasOwnProperty(vendor.id)) {
@@ -109,18 +118,12 @@ class Map extends Component {
     this.map.setCenter(this.state.position);
   }
   render() {
-    // if (!this.state.position) {
-    //   return (
-    //   );
-    // } else if (!this.mapRendered) {
-      // this.initializeMap();
-    // }
     return (
       <section className="map" >
-        <div className="map map--loading">
+        {/* <div className="map map--loading">
           <p>Getting your location</p>
           <Icon pulse name="spinner" size="5x" />
-        </div>
+        </div> */}
       </section>
     );
   }
