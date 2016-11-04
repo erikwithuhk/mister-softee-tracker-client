@@ -70,8 +70,16 @@ class Map extends Component {
   initializeMap() {
     this.map = new google.maps.Map(document.querySelector('.map'), {
       zoom: 13,
-      center: this.defaultCenter,
       draggable: true,
+      center: this.defaultCenter,
+    });
+    this.addMapEventListeners();
+  }
+  addMapEventListeners() {
+    this.map.addListener('drag', () => console.log('dragging'));
+    window.addEventListener('resize', () => {
+      google.maps.event.trigger(this.map, 'resize')
+      this.recenterMap();
     });
   }
   createCurrentPositionMarker() {
