@@ -93,7 +93,6 @@ class Map extends Component {
   getVendorMarkers() {
     this.props.vendors.forEach((vendor) => {
       if (this.state.markers.hasOwnProperty(vendor.id)) {
-        // console.log(this.state.markers[vendor.id]);
         const vendorPosition = {
           lat: vendor.position_lat,
           lng: vendor.position_lng,
