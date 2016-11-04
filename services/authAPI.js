@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-const signupPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/signup';
-const loginPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/login';
+const signupPath = 'http://localhost:3000/api/v1/signup';
+const loginPath = 'http://localhost:3000/api/v1/login';
 
 class AuthApi {
   static signup({ email, password, type = 'User' }) {

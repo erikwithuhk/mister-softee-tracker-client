@@ -33,18 +33,18 @@ class Map extends Component {
   }
   componentDidMount() {
     this.initializeMap();
-    this.state.intervalID = setInterval(() => {
-      this.getUserPosition();
-      this.props.dispatch(fetchVendors());
-      this.getVendorMarkers();
-      if (this.map.getCenter() === this.defaultCenter && this.state.position) {
-        this.recenterMap();
-        this.createCurrentPositionMarker();
-      }
-      if (this.state.currentPositionMarker) {
-        this.setCurrentPositionMarker();
-      }
-    }, 1000);
+    // this.state.intervalID = setInterval(() => {
+    //   this.getUserPosition();
+    //   this.props.dispatch(fetchVendors());
+    //   this.getVendorMarkers();
+    //   if (this.map.getCenter() === this.defaultCenter && this.state.position) {
+    //     this.recenterMap();
+    //     this.createCurrentPositionMarker();
+    //   }
+    //   if (this.state.currentPositionMarker) {
+    //     this.setCurrentPositionMarker();
+    //   }
+    // }, 1000);
   }
   componentWillUnmount() {
     clearInterval(this.state.intervalID);

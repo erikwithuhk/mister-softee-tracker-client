@@ -1,3 +1,5 @@
+import decoder from 'jwt-decode';
+
 const initialState = {
   authRequestInProgress: false,
   authErrors: [],
@@ -14,15 +16,17 @@ export default function reducer(state = initialState, action) {
       return { ...state, authRequestInProgress: true };
     }
     case 'SIGNUP_REQUEST_FULFILLED': {
+      const decodedToken = decoder(action.payload.auth_token);
       return {
         ...state,
         authRequestInProgress: false,
         authErrors: [],
+        ...state.session,
         session: {
-          ...state.session,
           authToken: action.payload.auth_token,
-          email: action.payload.user.email,
-          userID: action.payload.user.id,
+          userID: decodedToken.user_id,
+          email: decodedToken.email,
+          userType: decodedToken.type,
         },
       };
     }
@@ -33,6 +37,7 @@ export default function reducer(state = initialState, action) {
       return { ...state, authRequestInProgress: true };
     }
     case 'LOGIN_REQUEST_FULFILLED': {
+      const decodedToken = decoder(action.payload.auth_token);
       return {
         ...state,
         authRequestInProgress: false,
@@ -40,8 +45,9 @@ export default function reducer(state = initialState, action) {
         session: {
           ...state.session,
           authToken: action.payload.auth_token,
-          email: action.payload.user.email,
-          userID: action.payload.user.id,
+          userID: decodedToken.user_id,
+          email: decodedToken.email,
+          userType: decodedToken.type,
         },
       };
     }
