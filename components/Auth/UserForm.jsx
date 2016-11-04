@@ -14,6 +14,7 @@ const propTypes = {
 
 @connect((store) => {
   return {
+    position: store.user.position,
     session: store.session.session,
   };
 })

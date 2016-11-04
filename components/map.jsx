@@ -33,18 +33,18 @@ class Map extends Component {
   }
   componentDidMount() {
     this.initializeMap();
-    // this.state.intervalID = setInterval(() => {
-    //   this.getUserPosition();
-    //   this.props.dispatch(fetchVendors());
-    //   this.getVendorMarkers();
-    //   if (this.map.getCenter() === this.defaultCenter && this.state.position) {
-    //     this.recenterMap();
-    //     this.createCurrentPositionMarker();
-    //   }
-    //   if (this.state.currentPositionMarker) {
-    //     this.setCurrentPositionMarker();
-    //   }
-    // }, 1000);
+    this.state.intervalID = setInterval(() => {
+      this.getUserPosition();
+      this.props.dispatch(fetchVendors());
+      this.getVendorMarkers();
+      if (this.map.getCenter() === this.defaultCenter && this.state.position) {
+        this.recenterMap();
+        this.createCurrentPositionMarker();
+      }
+      if (this.state.currentPositionMarker) {
+        this.setCurrentPositionMarker();
+      }
+    }, 1000);
   }
   componentWillUnmount() {
     clearInterval(this.state.intervalID);
@@ -109,7 +109,7 @@ class Map extends Component {
           lng: vendor.position_lng,
         };
         this.state.markers[vendor.id].setPosition(vendorPosition);
-      } else {
+      } else if (vendor.position_lat !== null && vendor.position_lng !== null) {
         const marker = new google.maps.Marker({
           map: this.map,
           anchorPoint: new google.maps.Point(0, 0),
