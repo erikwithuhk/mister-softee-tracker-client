@@ -3,18 +3,15 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
 import { updatePosition } from '../actions/userActions';
-// import { saveMap, addMarker } from '../actions/mapActions';
 import { fetchVendors } from '../actions/vendorActions';
 
 const propTypes = {
-  // containerElementProps: React.PropTypes.object,
 };
 
 @connect((store) => {
   return {
     session: store.session.session,
     position: store.user.position,
-    // map: store.map,
     vendors: store.vendor.vendors,
   };
 })
@@ -24,8 +21,7 @@ class Map extends Component {
     super(props);
 
     this.state = {
-      // mapRendered: false,
-      // markers: {},
+      markers: {},
       currentPositionMarker: null,
       position: null,
     };
@@ -39,9 +35,11 @@ class Map extends Component {
     this.initializeMap();
     this.state.intervalID = setInterval(() => {
       this.getUserPosition();
+      this.props.dispatch(fetchVendors());
+      this.getVendorMarkers();
       if (this.map.getCenter() === this.defaultCenter && this.state.position) {
-        this.createCurrentPositionMarker();
         this.recenterMap();
+        this.createCurrentPositionMarker();
       }
       if (this.state.currentPositionMarker) {
         this.setCurrentPositionMarker();
@@ -92,28 +90,32 @@ class Map extends Component {
   setCurrentPositionMarker() {
     this.state.currentPositionMarker.setPosition(this.state.position);
   }
-  // getMarkers() {
-  //   this.props.vendors.forEach((vendor) => {
-  //     if (this.state.markers.hasOwnProperty(vendor.id)) {
-  //       this.state.markers[vendor.id].setPosition(new google.maps.LatLng(vendor.position_lat,vendor.position_lng));
-  //     } else {
-  //       const marker = new google.maps.Marker({
-  //         map: this.map,
-  //         anchorPoint: new google.maps.Point(0, 0),
-  //         position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
-  //         title: `${vendor.id}`,
-  //         icon: {
-  //           url: '../images/mister-softee-tracker_truck-icon.svg',
-  //           scaledSize: new google.maps.Size(50, 32),
-  //         },
-  //       });
-  //       const newMarkerState = this.state.markers;
-  //       newMarkerState[vendor.id] = marker;
-  //       this.setState(newMarkerState);
-  //       // this.props.dispatch(addMarker({ id, marker }));
-  //     }
-  //   });
-  // }
+  getVendorMarkers() {
+    this.props.vendors.forEach((vendor) => {
+      if (this.state.markers.hasOwnProperty(vendor.id)) {
+        // console.log(this.state.markers[vendor.id]);
+        const vendorPosition = {
+          lat: vendor.position_lat,
+          lng: vendor.position_lng,
+        };
+        this.state.markers[vendor.id].setPosition(vendorPosition);
+      } else {
+        const marker = new google.maps.Marker({
+          map: this.map,
+          anchorPoint: new google.maps.Point(0, 0),
+          position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
+          title: `${vendor.id}`,
+          icon: {
+            url: '../images/mister-softee-tracker_truck-icon.svg',
+            scaledSize: new google.maps.Size(50, 32),
+          },
+        });
+        const newMarkerState = this.state.markers;
+        newMarkerState[vendor.id] = marker;
+        this.setState({ markers: newMarkerState });
+      }
+    });
+  }
   recenterMap() {
     this.map.setCenter(this.state.position);
   }
