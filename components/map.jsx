@@ -115,29 +115,45 @@ class Map extends Component {
     }
     users.forEach((user) => {
       if (this.state.markers.hasOwnProperty(user.id)) {
-        const userPosition = {
-          lat: user.position_lat,
-          lng: user.position_lng,
-        };
-        this.state.markers[user.id].setPosition(userPosition);
+        this.setMarkerPosition(user);
       } else if (user.position_lat !== null && user.position_lng !== null) {
-        const marker = new google.maps.Marker({
-          map: this.map,
-          anchorPoint: new google.maps.Point(0, 0),
-          position: new google.maps.LatLng(user.position_lat,user.position_lng),
-          title: `${user.id}`,
-          icon: {
-            url: '../images/mister-softee-tracker_truck-icon.svg',
-            scaledSize: new google.maps.Size(50, 32),
-          },
-        });
-        const newMarkerState = this.state.markers;
-        newMarkerState[user.id] = marker;
-        setTimeout(() => {
-          this.setState({ markers: newMarkerState });
-        }, 1000);
+        this.createMarker(user);
       }
     });
+  }
+  createMarker(user) {
+    console.log(user);
+    let url;
+    let scaledSize;
+    if (user.type === 'Customer') {
+      url = '../images/mister-softee-tracker_customer.svg';
+      scaledSize = new google.maps.Size(25, 50);
+    } else if (user.type === 'Vendor') {
+      url = '../images/mister-softee-tracker_truck-icon.svg';
+      scaledSize = new google.maps.Size(50, 32);
+    }
+    const marker = new google.maps.Marker({
+      map: this.map,
+      anchorPoint: new google.maps.Point(0, 0),
+      position: new google.maps.LatLng(user.position_lat,user.position_lng),
+      title: `${user.id}`,
+      icon: {
+        url,
+        scaledSize,
+      },
+    });
+    const newMarkerState = this.state.markers;
+    newMarkerState[user.id] = marker;
+    setTimeout(() => {
+      this.setState({ markers: newMarkerState });
+    }, 1000);
+  }
+  setMarkerPosition(user) {
+    const userPosition = {
+      lat: user.position_lat,
+      lng: user.position_lng,
+    };
+    this.state.markers[user.id].setPosition(userPosition);
   }
   recenterMap() {
     this.map.setCenter(this.state.position);
