@@ -1,3 +1,10 @@
+export function saveMap({ map }) {
+  return {
+    type: 'SAVE_MAP',
+    payload: { map },
+  };
+}
+
 export function addMarker({ id, marker }) {
   return {
     type: 'ADD_MARKER',

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
 import { updatePosition } from '../actions/userActions';
-import { addMarker } from '../actions/mapActions';
+// import { saveMap, addMarker } from '../actions/mapActions';
 import { fetchVendors } from '../actions/vendorActions';
 
 const propTypes = {
@@ -14,7 +14,7 @@ const propTypes = {
   return {
     session: store.session.session,
     position: store.user.position,
-    markers: store.map.markers,
+    // map: store.map,
     vendors: store.vendor.vendors,
   };
 })
@@ -23,20 +23,32 @@ class Map extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      mapRendered: false,
+      // mapRendered: false,
+      // markers: {},
       position: null,
     };
+    this.defaultCenter = new google.maps.LatLng(40.6782, -73.9442);
+    // this.defaultCenter = { lat: 40.6782, lng: -73.9442 };
+    this.map = null;
+    this.clearPositionInterval = this.clearPositionInterval.bind(this);
   }
   componentDidMount() {
-    this.startPositionInterval();
+    this.initializeMap();
+    this.state.intervalID = setInterval(() => {
+      this.getUserPosition();
+      if (this.map.getCenter() === this.defaultCenter && this.state.position) {
+        this.recenterMap();
+      }
+    }, 1000);
   }
   componentWillUnmount() {
-    this.clearPositionInterval();
+    clearInterval(this.state.intervalID);
   }
   getUserPosition() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
+        this.setState({ position: { lat: latitude, lng: longitude } });
         if (this.props.session.userID) {
           this.props.dispatch(updatePosition({
             userID: this.props.session.userID,
@@ -44,79 +56,72 @@ class Map extends Component {
             lng: longitude,
           }));
         }
-        this.setState({ position: { lat: latitude, lng: longitude } });
       });
     }
   }
-  startPositionInterval() {
-    const getPositions = setInterval(() => {
-      this.getUserPosition()
-      this.props.dispatch(fetchVendors());
-      this.getMarkers();
-    }, 1000);
-    this.setState({ positionIntervalID: getPositions });
-  }
   clearPositionInterval() {
-    clearInterval(this.state.positionIntervalID);
+    clearInterval(this.getPositions);
   }
   initializeMap() {
     this.map = new google.maps.Map(document.querySelector('.map'), {
       zoom: 13,
-      center: this.state.position,
+      center: this.defaultCenter,
       draggable: true,
     });
-    this.markers = {};
-    this.createCurrentLocationMarker();
-    this.setState({ mapRendered: true });
+    // this.createCurrentLocationMarker();
+    // this.setState({ mapRendered: true });
   }
-  createCurrentLocationMarker() {
-    new google.maps.Marker({
-      map: this.map,
-      position: this.state.position,
-      anchorPoint: new google.maps.Point(0, 0),
-      icon: {
-        url: '../images/mister-softee-tracker_current-location-dot.svg',
-        scaledSize: new google.maps.Size(64, 64),
-      },
-      opacity: 0.75,
-    });
-  }
-  getMarkers() {
-    this.props.vendors.forEach((vendor) => {
-      if(this.markers.hasOwnProperty(vendor.id)) {
-        this.markers[vendor.id].setPosition(new google.maps.LatLng(vendor.position_lat,vendor.position_lng));
-      } else {
-        const marker = new google.maps.Marker({
-          map: this.map,
-          anchorPoint: new google.maps.Point(0, 0),
-          position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
-          title: `${vendor.id}`,
-          icon: {
-            url: '../images/mister-softee-tracker_truck-icon.svg',
-            scaledSize: new google.maps.Size(50, 32),
-          },
-        });
-        const { id } = vendor;
-        this.props.dispatch(addMarker({ id, marker }));
-      }
-    });
-  }
+  // createCurrentLocationMarker() {
+  //   new google.maps.Marker({
+  //     map: this.map,
+  //     position: this.state.position,
+  //     anchorPoint: new google.maps.Point(0, 0),
+  //     icon: {
+  //       url: '../images/mister-softee-tracker_current-location-dot.svg',
+  //       scaledSize: new google.maps.Size(64, 64),
+  //     },
+  //     opacity: 0.75,
+  //   });
+  // }
+  // getMarkers() {
+  //   this.props.vendors.forEach((vendor) => {
+  //     if (this.state.markers.hasOwnProperty(vendor.id)) {
+  //       this.state.markers[vendor.id].setPosition(new google.maps.LatLng(vendor.position_lat,vendor.position_lng));
+  //     } else {
+  //       const marker = new google.maps.Marker({
+  //         map: this.map,
+  //         anchorPoint: new google.maps.Point(0, 0),
+  //         position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
+  //         title: `${vendor.id}`,
+  //         icon: {
+  //           url: '../images/mister-softee-tracker_truck-icon.svg',
+  //           scaledSize: new google.maps.Size(50, 32),
+  //         },
+  //       });
+  //       const newMarkerState = this.state.markers;
+  //       newMarkerState[vendor.id] = marker;
+  //       this.setState(newMarkerState);
+  //       // this.props.dispatch(addMarker({ id, marker }));
+  //     }
+  //   });
+  // }
   recenterMap() {
     this.map.setCenter(this.state.position);
   }
   render() {
-    if (!this.state.position) {
-      return (
-        <section className="map map--loading">
+    // if (!this.state.position) {
+    //   return (
+    //   );
+    // } else if (!this.mapRendered) {
+      // this.initializeMap();
+    // }
+    return (
+      <section className="map" >
+        <div className="map map--loading">
           <p>Getting your location</p>
           <Icon pulse name="spinner" size="5x" />
-        </section>
-      );
-    } else if (!this.state.mapRendered) {
-      this.initializeMap();
-    }
-    return (
-      <section className="map" />
+        </div>
+      </section>
     );
   }
 }
