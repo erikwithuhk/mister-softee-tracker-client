@@ -1,13 +1,15 @@
 import { combineReducers } from 'redux';
 
-import user from './userReducer'
-import session from './authReducer'
+import customer from './customerReducer'
 import map from './mapReducer'
+import session from './authReducer'
+import user from './userReducer'
 import vendor from './vendorReducer'
 
 export default combineReducers({
-  user,
-  session,
+  customer,
   map,
+  session,
+  user,
   vendor,
 });

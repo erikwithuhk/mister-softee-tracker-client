@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
 import { updatePosition } from '../actions/userActions';
+import { fetchCustomers } from '../actions/customerActions';
 import { fetchVendors } from '../actions/vendorActions';
 
 const propTypes = {
@@ -12,6 +13,7 @@ const propTypes = {
   return {
     session: store.session.session,
     position: store.user.position,
+    customers: store.customer.customers,
     vendors: store.vendor.vendors,
   };
 })
@@ -35,8 +37,12 @@ class Map extends Component {
     this.initializeMap();
     this.state.intervalID = setInterval(() => {
       this.getUserPosition();
-      this.props.dispatch(fetchVendors());
-      this.getVendorMarkers();
+      if (!this.props.session.authToken || this.props.session.userType === 'Customer') {
+        this.props.dispatch(fetchVendors());
+      } else if (this.props.session.userType === 'Vendor') {
+        this.props.dispatch(fetchCustomers());
+      }
+      this.getMarkers();
       if (this.map.getCenter() === this.defaultCenter && this.state.position) {
         this.recenterMap();
         this.createCurrentPositionMarker();
@@ -76,7 +82,6 @@ class Map extends Component {
     this.addMapEventListeners();
   }
   addMapEventListeners() {
-    this.map.addListener('drag', () => console.log('dragging'));
     window.addEventListener('resize', () => {
       google.maps.event.trigger(this.map, 'resize')
       this.recenterMap();
@@ -101,27 +106,33 @@ class Map extends Component {
   setCurrentPositionMarker() {
     this.state.currentPositionMarker.setPosition(this.state.position);
   }
-  getVendorMarkers() {
-    this.props.vendors.forEach((vendor) => {
-      if (this.state.markers.hasOwnProperty(vendor.id)) {
-        const vendorPosition = {
-          lat: vendor.position_lat,
-          lng: vendor.position_lng,
+  getMarkers() {
+    let users;
+    if (!this.props.session.authToken || this.props.session.userType === 'Customer') {
+      users = this.props.vendors;
+    } else if (this.props.session.userType === 'Vendor') {
+      users = this.props.customers;
+    }
+    users.forEach((user) => {
+      if (this.state.markers.hasOwnProperty(user.id)) {
+        const userPosition = {
+          lat: user.position_lat,
+          lng: user.position_lng,
         };
-        this.state.markers[vendor.id].setPosition(vendorPosition);
-      } else if (vendor.position_lat !== null && vendor.position_lng !== null) {
+        this.state.markers[user.id].setPosition(userPosition);
+      } else if (user.position_lat !== null && user.position_lng !== null) {
         const marker = new google.maps.Marker({
           map: this.map,
           anchorPoint: new google.maps.Point(0, 0),
-          position: new google.maps.LatLng(vendor.position_lat,vendor.position_lng),
-          title: `${vendor.id}`,
+          position: new google.maps.LatLng(user.position_lat,user.position_lng),
+          title: `${user.id}`,
           icon: {
             url: '../images/mister-softee-tracker_truck-icon.svg',
             scaledSize: new google.maps.Size(50, 32),
           },
         });
         const newMarkerState = this.state.markers;
-        newMarkerState[vendor.id] = marker;
+        newMarkerState[user.id] = marker;
         setTimeout(() => {
           this.setState({ markers: newMarkerState });
         }, 1000);
