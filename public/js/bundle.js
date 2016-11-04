@@ -23065,11 +23065,11 @@
 	
 	var _Map2 = _interopRequireDefault(_Map);
 	
-	var _UserForm = __webpack_require__(358);
+	var _UserForm = __webpack_require__(359);
 	
 	var _UserForm2 = _interopRequireDefault(_UserForm);
 	
-	var _NotFound = __webpack_require__(359);
+	var _NotFound = __webpack_require__(360);
 	
 	var _NotFound2 = _interopRequireDefault(_NotFound);
 	
@@ -34412,7 +34412,7 @@
 	
 	var _userActions = __webpack_require__(341);
 	
-	var _vendorActions = __webpack_require__(357);
+	var _vendorActions = __webpack_require__(358);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -34422,9 +34422,7 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var propTypes = {
-	  // containerElementProps: React.PropTypes.object,
-	};
+	var propTypes = {};
 	
 	var Map = (_dec = (0, _reactRedux.connect)(function (store) {
 	  return {
@@ -34441,27 +34439,46 @@
 	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
 	
 	    _this.state = {
-	      mapRendered: false,
-	      position: null,
-	      vendorPositions: [{ lat: 40.671, lng: -73.962 }, { lat: 40.681, lng: -73.952 }, { lat: 40.631, lng: -73.982 }, { lat: 40.651, lng: -73.992 }]
+	      markers: {},
+	      currentPositionMarker: null,
+	      position: null
 	    };
+	
+	    _this.defaultCenter = new google.maps.LatLng(40.6782, -73.9442);
+	    _this.map = null;
+	
+	    _this.clearPositionInterval = _this.clearPositionInterval.bind(_this);
 	    return _this;
 	  }
 	
 	  _createClass(Map, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      this.startPositionInterval();
+	      var _this2 = this;
+	
+	      this.initializeMap();
+	      this.state.intervalID = setInterval(function () {
+	        _this2.getUserPosition();
+	        _this2.props.dispatch((0, _vendorActions.fetchVendors)());
+	        _this2.getVendorMarkers();
+	        if (_this2.map.getCenter() === _this2.defaultCenter && _this2.state.position) {
+	          _this2.recenterMap();
+	          _this2.createCurrentPositionMarker();
+	        }
+	        if (_this2.state.currentPositionMarker) {
+	          _this2.setCurrentPositionMarker();
+	        }
+	      }, 1000);
 	    }
 	  }, {
 	    key: 'componentWillUnmount',
 	    value: function componentWillUnmount() {
-	      this.clearPositionInterval();
+	      clearInterval(this.state.intervalID);
 	    }
 	  }, {
 	    key: 'getUserPosition',
 	    value: function getUserPosition() {
-	      var _this2 = this;
+	      var _this3 = this;
 	
 	      if (navigator.geolocation) {
 	        navigator.geolocation.getCurrentPosition(function (position) {
@@ -34469,49 +34486,35 @@
 	              latitude = _position$coords.latitude,
 	              longitude = _position$coords.longitude;
 	
-	          if (_this2.props.session.userID) {
-	            _this2.props.dispatch((0, _userActions.updatePosition)({
-	              userID: _this2.props.session.userID,
+	          _this3.setState({ position: { lat: latitude, lng: longitude } });
+	          if (_this3.props.session.userID) {
+	            _this3.props.dispatch((0, _userActions.updatePosition)({
+	              userID: _this3.props.session.userID,
 	              lat: latitude,
 	              lng: longitude
 	            }));
 	          }
-	          _this2.setState({ position: { lat: latitude, lng: longitude } });
 	        });
 	      }
 	    }
 	  }, {
-	    key: 'startPositionInterval',
-	    value: function startPositionInterval() {
-	      var _this3 = this;
-	
-	      var getPositions = setInterval(function () {
-	        _this3.getUserPosition();
-	        _this3.props.dispatch((0, _vendorActions.fetchVendors)());
-	        _this3.createVendorLocationMarkers();
-	      }, 1000);
-	      this.setState({ positionIntervalID: getPositions });
-	    }
-	  }, {
 	    key: 'clearPositionInterval',
 	    value: function clearPositionInterval() {
-	      clearInterval(this.state.positionIntervalID);
+	      clearInterval(this.getPositions);
 	    }
 	  }, {
 	    key: 'initializeMap',
 	    value: function initializeMap() {
 	      this.map = new google.maps.Map(document.querySelector('.map'), {
 	        zoom: 13,
-	        center: this.state.position,
+	        center: this.defaultCenter,
 	        draggable: true
 	      });
-	      this.createCurrentLocationMarker();
-	      this.setState({ mapRendered: true });
 	    }
 	  }, {
-	    key: 'createCurrentLocationMarker',
-	    value: function createCurrentLocationMarker() {
-	      new google.maps.Marker({
+	    key: 'createCurrentPositionMarker',
+	    value: function createCurrentPositionMarker() {
+	      var currentPositionMarker = new google.maps.Marker({
 	        map: this.map,
 	        position: this.state.position,
 	        anchorPoint: new google.maps.Point(0, 0),
@@ -34521,25 +34524,40 @@
 	        },
 	        opacity: 0.75
 	      });
+	      this.setState({ currentPositionMarker: currentPositionMarker });
 	    }
 	  }, {
-	    key: 'createVendorLocationMarkers',
-	    value: function createVendorLocationMarkers() {
+	    key: 'setCurrentPositionMarker',
+	    value: function setCurrentPositionMarker() {
+	      this.state.currentPositionMarker.setPosition(this.state.position);
+	    }
+	  }, {
+	    key: 'getVendorMarkers',
+	    value: function getVendorMarkers() {
 	      var _this4 = this;
 	
 	      this.props.vendors.forEach(function (vendor) {
-	        new google.maps.Marker({
-	          map: _this4.map,
-	          position: {
+	        if (_this4.state.markers.hasOwnProperty(vendor.id)) {
+	          var vendorPosition = {
 	            lat: vendor.position_lat,
 	            lng: vendor.position_lng
-	          },
-	          anchorPoint: new google.maps.Point(0, 0),
-	          icon: {
-	            url: '../images/mister-softee-tracker_truck-icon.svg',
-	            scaledSize: new google.maps.Size(50, 32)
-	          }
-	        });
+	          };
+	          _this4.state.markers[vendor.id].setPosition(vendorPosition);
+	        } else {
+	          var marker = new google.maps.Marker({
+	            map: _this4.map,
+	            anchorPoint: new google.maps.Point(0, 0),
+	            position: new google.maps.LatLng(vendor.position_lat, vendor.position_lng),
+	            title: '' + vendor.id,
+	            icon: {
+	              url: '../images/mister-softee-tracker_truck-icon.svg',
+	              scaledSize: new google.maps.Size(50, 32)
+	            }
+	          });
+	          var newMarkerState = _this4.state.markers;
+	          newMarkerState[vendor.id] = marker;
+	          _this4.setState({ markers: newMarkerState });
+	        }
 	      });
 	    }
 	  }, {
@@ -34550,20 +34568,6 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      if (!this.state.position) {
-	        return _react2.default.createElement(
-	          'section',
-	          { className: 'map map--loading' },
-	          _react2.default.createElement(
-	            'p',
-	            null,
-	            'Getting your location'
-	          ),
-	          _react2.default.createElement(_reactFa.Icon, { pulse: true, name: 'spinner', size: '5x' })
-	        );
-	      } else if (!this.state.mapRendered) {
-	        this.initializeMap();
-	      }
 	      return _react2.default.createElement('section', { className: 'map' });
 	    }
 	  }]);
@@ -35786,7 +35790,11 @@
 	
 	var _authReducer2 = _interopRequireDefault(_authReducer);
 	
-	var _vendorReducer = __webpack_require__(356);
+	var _mapReducer = __webpack_require__(356);
+	
+	var _mapReducer2 = _interopRequireDefault(_mapReducer);
+	
+	var _vendorReducer = __webpack_require__(357);
 	
 	var _vendorReducer2 = _interopRequireDefault(_vendorReducer);
 	
@@ -35795,6 +35803,7 @@
 	exports.default = (0, _redux.combineReducers)({
 	  user: _userReducer2.default,
 	  session: _authReducer2.default,
+	  map: _mapReducer2.default,
 	  vendor: _vendorReducer2.default
 	});
 
@@ -35971,6 +35980,43 @@
 	
 	exports.default = reducer;
 	var initialState = {
+	  map: null,
+	  markers: {}
+	};
+	
+	function reducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'SAVE_MAP':
+	      {
+	        return _extends({}, state, { map: action.payload.map });
+	      }
+	    case 'ADD_MARKER':
+	      {
+	        var newState = state;
+	        newState.markers[action.payload.id] = action.payload.marker;
+	        return newState;
+	      }
+	  }
+	  return state;
+	}
+
+/***/ },
+/* 357 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = reducer;
+	var initialState = {
 	  vendors: [],
 	  vendorRequestInProgress: false,
 	  vendorErrors: []
@@ -36004,7 +36050,7 @@
 	}
 
 /***/ },
-/* 357 */
+/* 358 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36032,7 +36078,7 @@
 	}
 
 /***/ },
-/* 358 */
+/* 359 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36227,7 +36273,7 @@
 	exports.default = (0, _reactRouter.withRouter)(UserForm);
 
 /***/ },
-/* 359 */
+/* 360 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

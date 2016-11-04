@@ -85,6 +85,9 @@ class Map extends Component {
       },
       opacity: 0.75,
     });
+    setTimeout(() => {
+
+    });
     this.setState({ currentPositionMarker });
   }
   setCurrentPositionMarker() {
@@ -111,7 +114,9 @@ class Map extends Component {
         });
         const newMarkerState = this.state.markers;
         newMarkerState[vendor.id] = marker;
-        this.setState({ markers: newMarkerState });
+        setTimeout(() => {
+          this.setState({ markers: newMarkerState });
+        }, 1000);
       }
     });
   }
