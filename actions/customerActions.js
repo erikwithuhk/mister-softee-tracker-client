@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { apiRequest } from '../services/APIRequest';
 
-const customersPath = 'http://localhost:3000/api/v1/customers';
+const customersPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/customers';
 
 export function fetchCustomers() {
   return {
