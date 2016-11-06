@@ -32878,8 +32878,8 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var signupPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/signup';
-	var loginPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/login';
+	var signupPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/signup';
+	var loginPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/login';
 	
 	var AuthApi = function () {
 	  function AuthApi() {
@@ -34666,7 +34666,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var usersPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/users';
+	var usersPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/users';
 	
 	function fetchUsers() {
 	  return {
@@ -36278,7 +36278,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var customersPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/customers';
+	var customersPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/customers';
 	
 	function fetchCustomers() {
 	  return {
@@ -36306,7 +36306,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var vendorsPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/vendors';
+	var vendorsPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/vendors';
 	
 	function fetchVendors() {
 	  return {
