@@ -181,6 +181,7 @@ input[type=submit] {
           flex: 1;
   justify-content: center;
   align-items: center;
+  padding: 0.25em;
   text-align: center;
   text-decoration: none;
 }
@@ -212,17 +213,17 @@ div.logo_icon {
   background: url(../images/mister-softee-tracker_logo_RGB_cone.png) no-repeat center center;
   background-size: contain;
   margin: 0 0.5rem;
-  padding-bottom: 13%;
-  width: 13%;
+  padding-bottom: 10%;
+  width: 10%;
 }
 
 header h2 {
   font-size: 1.5em;
   position: absolute;
-  left: 7.5%;
+  left: 10%;
   top: calc(50% - 0.5em);
   text-align: center;
-  width: 85%;
+  width: 80%;
 }
 
 nav.bottom-nav {
