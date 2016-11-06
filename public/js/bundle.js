@@ -23065,11 +23065,11 @@
 	
 	var _Map2 = _interopRequireDefault(_Map);
 	
-	var _UserForm = __webpack_require__(359);
+	var _UserForm = __webpack_require__(364);
 	
 	var _UserForm2 = _interopRequireDefault(_UserForm);
 	
-	var _NotFound = __webpack_require__(360);
+	var _NotFound = __webpack_require__(365);
 	
 	var _NotFound2 = _interopRequireDefault(_NotFound);
 	
@@ -32781,9 +32781,21 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var session = this.props.session;
+	
 	      return _react2.default.createElement(
 	        'section',
 	        { className: 'account-container' },
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          session.email
+	        ),
+	        _react2.default.createElement(
+	          'p',
+	          null,
+	          session.userType
+	        ),
 	        _react2.default.createElement(
 	          'button',
 	          { className: 'signout-button', onClick: this.logOut },
@@ -32825,7 +32837,7 @@
 	      password = _ref.password,
 	      isVendor = _ref.isVendor;
 	
-	  var type = isVendor ? 'Vendor' : 'User';
+	  var type = isVendor ? 'Vendor' : 'Customer';
 	  return {
 	    type: 'SIGNUP_REQUEST',
 	    payload: _AuthAPI2.default.signup({ email: email, password: password, type: type })
@@ -32866,8 +32878,8 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var signupPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/signup';
-	var loginPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/login';
+	var signupPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/signup';
+	var loginPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/login';
 	
 	var AuthApi = function () {
 	  function AuthApi() {
@@ -32880,7 +32892,7 @@
 	      var email = _ref.email,
 	          password = _ref.password,
 	          _ref$type = _ref.type,
-	          type = _ref$type === undefined ? 'User' : _ref$type;
+	          type = _ref$type === undefined ? 'Customer' : _ref$type;
 	
 	      return _axios2.default.post(signupPath, { user: { email: email, password: password, type: type } }).then(function (response) {
 	        return response.data;
@@ -34412,7 +34424,9 @@
 	
 	var _userActions = __webpack_require__(341);
 	
-	var _vendorActions = __webpack_require__(358);
+	var _customerActions = __webpack_require__(362);
+	
+	var _vendorActions = __webpack_require__(363);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -34428,6 +34442,7 @@
 	  return {
 	    session: store.session.session,
 	    position: store.user.position,
+	    customers: store.customer.customers,
 	    vendors: store.vendor.vendors
 	  };
 	}), _dec(_class = function (_Component) {
@@ -34459,8 +34474,12 @@
 	      this.initializeMap();
 	      this.state.intervalID = setInterval(function () {
 	        _this2.getUserPosition();
-	        _this2.props.dispatch((0, _vendorActions.fetchVendors)());
-	        _this2.getVendorMarkers();
+	        if (!_this2.props.session.authToken || _this2.props.session.userType === 'Customer') {
+	          _this2.props.dispatch((0, _vendorActions.fetchVendors)());
+	        } else if (_this2.props.session.userType === 'Vendor') {
+	          _this2.props.dispatch((0, _customerActions.fetchCustomers)());
+	        }
+	        _this2.getMarkers();
 	        if (_this2.map.getCenter() === _this2.defaultCenter && _this2.state.position) {
 	          _this2.recenterMap();
 	          _this2.createCurrentPositionMarker();
@@ -34507,8 +34526,19 @@
 	    value: function initializeMap() {
 	      this.map = new google.maps.Map(document.querySelector('.map'), {
 	        zoom: 13,
-	        center: this.defaultCenter,
-	        draggable: true
+	        draggable: true,
+	        center: this.defaultCenter
+	      });
+	      this.addMapEventListeners();
+	    }
+	  }, {
+	    key: 'addMapEventListeners',
+	    value: function addMapEventListeners() {
+	      var _this4 = this;
+	
+	      window.addEventListener('resize', function () {
+	        google.maps.event.trigger(_this4.map, 'resize');
+	        _this4.recenterMap();
 	      });
 	    }
 	  }, {
@@ -34524,6 +34554,7 @@
 	        },
 	        opacity: 0.75
 	      });
+	      setTimeout(function () {});
 	      this.setState({ currentPositionMarker: currentPositionMarker });
 	    }
 	  }, {
@@ -34532,33 +34563,68 @@
 	      this.state.currentPositionMarker.setPosition(this.state.position);
 	    }
 	  }, {
-	    key: 'getVendorMarkers',
-	    value: function getVendorMarkers() {
-	      var _this4 = this;
+	    key: 'getMarkers',
+	    value: function getMarkers() {
+	      var _this5 = this;
 	
-	      this.props.vendors.forEach(function (vendor) {
-	        if (_this4.state.markers.hasOwnProperty(vendor.id)) {
-	          var vendorPosition = {
-	            lat: vendor.position_lat,
-	            lng: vendor.position_lng
-	          };
-	          _this4.state.markers[vendor.id].setPosition(vendorPosition);
-	        } else {
-	          var marker = new google.maps.Marker({
-	            map: _this4.map,
-	            anchorPoint: new google.maps.Point(0, 0),
-	            position: new google.maps.LatLng(vendor.position_lat, vendor.position_lng),
-	            title: '' + vendor.id,
-	            icon: {
-	              url: '../images/mister-softee-tracker_truck-icon.svg',
-	              scaledSize: new google.maps.Size(50, 32)
-	            }
-	          });
-	          var newMarkerState = _this4.state.markers;
-	          newMarkerState[vendor.id] = marker;
-	          _this4.setState({ markers: newMarkerState });
+	      var users = void 0;
+	      if (!this.props.session.authToken || this.props.session.userType === 'Customer') {
+	        users = this.props.vendors;
+	      } else if (this.props.session.userType === 'Vendor') {
+	        users = this.props.customers;
+	      }
+	      users.forEach(function (user) {
+	        if (_this5.state.markers.hasOwnProperty(user.id)) {
+	          _this5.setMarkerPosition(user);
+	        } else if (user.position_lat !== null && user.position_lng !== null) {
+	          _this5.createMarker(user);
 	        }
 	      });
+	    }
+	  }, {
+	    key: 'createMarker',
+	    value: function createMarker(user) {
+	      var _this6 = this;
+	
+	      var url = void 0;
+	      var scaledSize = void 0;
+	      if (user.type === 'Customer') {
+	        url = '../images/mister-softee-tracker_customer.svg';
+	        scaledSize = new google.maps.Size(25, 50);
+	      } else if (user.type === 'Vendor') {
+	        url = '../images/mister-softee-tracker_truck-icon.svg';
+	        scaledSize = new google.maps.Size(50, 32);
+	      }
+	      var infoWindow = new google.maps.InfoWindow({
+	        content: '<p>Click the button</p><button>Test</button>'
+	      });
+	      var marker = new google.maps.Marker({
+	        map: this.map,
+	        anchorPoint: new google.maps.Point(0, 0),
+	        position: new google.maps.LatLng(user.position_lat, user.position_lng),
+	        title: '' + user.id,
+	        icon: {
+	          url: url,
+	          scaledSize: scaledSize
+	        }
+	      });
+	      marker.addListener('click', function () {
+	        return infoWindow.open(_this6.map, marker);
+	      });
+	      var newMarkerState = this.state.markers;
+	      newMarkerState[user.id] = marker;
+	      setTimeout(function () {
+	        _this6.setState({ markers: newMarkerState });
+	      }, 1000);
+	    }
+	  }, {
+	    key: 'setMarkerPosition',
+	    value: function setMarkerPosition(user) {
+	      var userPosition = {
+	        lat: user.position_lat,
+	        lng: user.position_lng
+	      };
+	      this.state.markers[user.id].setPosition(userPosition);
 	    }
 	  }, {
 	    key: 'recenterMap',
@@ -34600,7 +34666,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var usersPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/users';
+	var usersPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/users';
 	
 	function fetchUsers() {
 	  return {
@@ -35782,28 +35848,33 @@
 	
 	var _redux = __webpack_require__(179);
 	
-	var _userReducer = __webpack_require__(354);
+	var _customerReducer = __webpack_require__(354);
 	
-	var _userReducer2 = _interopRequireDefault(_userReducer);
+	var _customerReducer2 = _interopRequireDefault(_customerReducer);
 	
-	var _authReducer = __webpack_require__(355);
-	
-	var _authReducer2 = _interopRequireDefault(_authReducer);
-	
-	var _mapReducer = __webpack_require__(356);
+	var _mapReducer = __webpack_require__(355);
 	
 	var _mapReducer2 = _interopRequireDefault(_mapReducer);
 	
-	var _vendorReducer = __webpack_require__(357);
+	var _authReducer = __webpack_require__(356);
+	
+	var _authReducer2 = _interopRequireDefault(_authReducer);
+	
+	var _userReducer = __webpack_require__(360);
+	
+	var _userReducer2 = _interopRequireDefault(_userReducer);
+	
+	var _vendorReducer = __webpack_require__(361);
 	
 	var _vendorReducer2 = _interopRequireDefault(_vendorReducer);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	exports.default = (0, _redux.combineReducers)({
-	  user: _userReducer2.default,
-	  session: _authReducer2.default,
+	  customer: _customerReducer2.default,
 	  map: _mapReducer2.default,
+	  session: _authReducer2.default,
+	  user: _userReducer2.default,
 	  vendor: _vendorReducer2.default
 	});
 
@@ -35821,12 +35892,9 @@
 	
 	exports.default = reducer;
 	var initialState = {
-	  users: [],
-	  userRequestInProgress: false,
-	  userErrors: [],
-	  position: null,
-	  positionUpdateInProgress: false,
-	  positionUpdateErrors: []
+	  customers: [],
+	  customerRequestInProgress: false,
+	  customerErrors: []
 	};
 	
 	function reducer() {
@@ -35834,40 +35902,22 @@
 	  var action = arguments[1];
 	
 	  switch (action.type) {
-	    case 'FETCH_USERS_PENDING':
+	    case 'FETCH_CUSTOMERS_PENDING':
 	      {
-	        return _extends({}, state, { userRequestInProgress: true });
+	        return _extends({}, state, { customerRequestInProgress: true });
 	      }
-	    case 'FETCH_USERS_FULFILLED':
+	    case 'FETCH_CUSTOMERS_FULFILLED':
 	      {
 	        return _extends({}, state, {
-	          userRequestInProgress: false,
-	          users: action.payload.data
+	          customerRequestInProgress: false,
+	          customers: action.payload.data
 	        });
 	      }
-	    case 'FETCH_USERS_REJECTED':
+	    case 'FETCH_CUSTOMERS_REJECTED':
 	      {
 	        return _extends({}, state, {
-	          userRequestInProgress: false,
-	          userErrors: action.payload
-	        });
-	      }
-	    case 'UPDATE_POSITION_PENDING':
-	      {
-	        return _extends({}, state, { positionUpdateInProgress: true });
-	      }
-	    case 'UPDATE_POSITION_FULFILLED':
-	      {
-	        return _extends({}, state, {
-	          positionUpdateInProgress: false,
-	          position: { lat: action.payload.data.position_lat, lng: action.payload.data.position_lng }
-	        });
-	      }
-	    case 'UPDATE_POSITION_REJECTED':
-	      {
-	        return _extends({}, state, {
-	          positionUpdateInProgress: false,
-	          positionUpdateErrors: action.payload
+	          customerRequestInProgress: false,
+	          customerErrors: action.payload
 	        });
 	      }
 	  }
@@ -35876,98 +35926,6 @@
 
 /***/ },
 /* 355 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-	
-	exports.default = reducer;
-	var initialState = {
-	  authRequestInProgress: false,
-	  authErrors: [],
-	  session: {
-	    authToken: null,
-	    email: null,
-	    userID: null
-	  }
-	};
-	
-	function reducer() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
-	  var action = arguments[1];
-	
-	  switch (action.type) {
-	    case 'SIGNUP_REQUEST_PENDING':
-	      {
-	        return _extends({}, state, { authRequestInProgress: true });
-	      }
-	    case 'SIGNUP_REQUEST_FULFILLED':
-	      {
-	        return _extends({}, state, {
-	          authRequestInProgress: false,
-	          authErrors: [],
-	          session: _extends({}, state.session, {
-	            authToken: action.payload.auth_token,
-	            email: action.payload.user.email,
-	            userID: action.payload.user.id
-	          })
-	        });
-	      }
-	    case 'SIGNUP_REQUEST_REJECTED':
-	      {
-	        return _extends({}, state, { authRequestInProgress: false, authErrors: action.payload });
-	      }
-	    case 'LOGIN_REQUEST_PENDING':
-	      {
-	        return _extends({}, state, { authRequestInProgress: true });
-	      }
-	    case 'LOGIN_REQUEST_FULFILLED':
-	      {
-	        return _extends({}, state, {
-	          authRequestInProgress: false,
-	          authErrors: [],
-	          session: _extends({}, state.session, {
-	            authToken: action.payload.auth_token,
-	            email: action.payload.user.email,
-	            userID: action.payload.user.id
-	          })
-	        });
-	      }
-	    case 'LOGIN_REQUEST_REJECTED':
-	      {
-	        return _extends({}, state, { authRequestInProgress: false, authErrors: action.payload });
-	      }
-	    case 'LOG_OUT':
-	      {
-	        return _extends({}, state, {
-	          authRequestInProgress: false,
-	          authErrors: [],
-	          session: _extends({}, state.session, {
-	            authToken: null,
-	            email: null,
-	            userID: null
-	          })
-	        });
-	      }
-	  }
-	  return state;
-	
-	  // Accessor Methods
-	  // TODO see if these accessor methods are necessary
-	  // getUsername() { return _sessionState.username; }
-	  // getUserId() { return _sessionState.userId; }
-	  // isLoggedIn() { return (_sessionState.authToken !== null); },
-	  // getAuthErrors() { return (_sessionState.authErrors !== null); },
-	  // isAuthRequestInProgress() { return (_sessionState.authRequestInProgress === true); }
-	}
-
-/***/ },
-/* 356 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36004,7 +35962,259 @@
 	}
 
 /***/ },
+/* 356 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = reducer;
+	
+	var _jwtDecode = __webpack_require__(357);
+	
+	var _jwtDecode2 = _interopRequireDefault(_jwtDecode);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var initialState = {
+	  authRequestInProgress: false,
+	  authErrors: [],
+	  session: {
+	    authToken: null,
+	    email: null,
+	    userID: null
+	  }
+	};
+	
+	function reducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'SIGNUP_REQUEST_PENDING':
+	      {
+	        return _extends({}, state, { authRequestInProgress: true });
+	      }
+	    case 'SIGNUP_REQUEST_FULFILLED':
+	      {
+	        var decodedToken = (0, _jwtDecode2.default)(action.payload.auth_token);
+	        return _extends({}, state, {
+	          authRequestInProgress: false,
+	          authErrors: []
+	        }, state.session, {
+	          session: {
+	            authToken: action.payload.auth_token,
+	            userID: decodedToken.user_id,
+	            email: decodedToken.email,
+	            userType: decodedToken.type
+	          }
+	        });
+	      }
+	    case 'SIGNUP_REQUEST_REJECTED':
+	      {
+	        return _extends({}, state, { authRequestInProgress: false, authErrors: action.payload });
+	      }
+	    case 'LOGIN_REQUEST_PENDING':
+	      {
+	        return _extends({}, state, { authRequestInProgress: true });
+	      }
+	    case 'LOGIN_REQUEST_FULFILLED':
+	      {
+	        var _decodedToken = (0, _jwtDecode2.default)(action.payload.auth_token);
+	        return _extends({}, state, {
+	          authRequestInProgress: false,
+	          authErrors: [],
+	          session: _extends({}, state.session, {
+	            authToken: action.payload.auth_token,
+	            userID: _decodedToken.user_id,
+	            email: _decodedToken.email,
+	            userType: _decodedToken.type
+	          })
+	        });
+	      }
+	    case 'LOGIN_REQUEST_REJECTED':
+	      {
+	        return _extends({}, state, { authRequestInProgress: false, authErrors: action.payload });
+	      }
+	    case 'LOG_OUT':
+	      {
+	        return _extends({}, state, {
+	          authRequestInProgress: false,
+	          authErrors: [],
+	          session: _extends({}, state.session, {
+	            authToken: null,
+	            email: null,
+	            userID: null
+	          })
+	        });
+	      }
+	  }
+	  return state;
+	
+	  // Accessor Methods
+	  // TODO see if these accessor methods are necessary
+	  // getUsername() { return _sessionState.username; }
+	  // getUserId() { return _sessionState.userId; }
+	  // isLoggedIn() { return (_sessionState.authToken !== null); },
+	  // getAuthErrors() { return (_sessionState.authErrors !== null); },
+	  // isAuthRequestInProgress() { return (_sessionState.authRequestInProgress === true); }
+	}
+
+/***/ },
 /* 357 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var base64_url_decode = __webpack_require__(358);
+	
+	module.exports = function (token,options) {
+	  if (typeof token !== 'string') {
+	    throw new Error('Invalid token specified');
+	  }
+	
+	  options = options || {};
+	  var pos = options.header === true ? 0 : 1;
+	  return JSON.parse(base64_url_decode(token.split('.')[pos]));
+	};
+
+
+/***/ },
+/* 358 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var atob = __webpack_require__(359);
+	
+	function b64DecodeUnicode(str) {
+	  return decodeURIComponent(atob(str).replace(/(.)/g, function (m, p) {
+	    var code = p.charCodeAt(0).toString(16).toUpperCase();
+	    if (code.length < 2) {
+	      code = '0' + code;
+	    }
+	    return '%' + code;
+	  }));
+	}
+	
+	module.exports = function(str) {
+	  var output = str.replace(/-/g, "+").replace(/_/g, "/");
+	  switch (output.length % 4) {
+	    case 0:
+	      break;
+	    case 2:
+	      output += "==";
+	      break;
+	    case 3:
+	      output += "=";
+	      break;
+	    default:
+	      throw "Illegal base64url string!";
+	  }
+	
+	  try{
+	    return b64DecodeUnicode(output);
+	  } catch (err) {
+	    return atob(output);
+	  }
+	};
+
+
+/***/ },
+/* 359 */
+/***/ function(module, exports) {
+
+	/**
+	 * The code was extracted from:
+	 * https://github.com/davidchambers/Base64.js
+	 */
+	
+	var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+	
+	function InvalidCharacterError(message) {
+	  this.message = message;
+	}
+	
+	InvalidCharacterError.prototype = new Error();
+	InvalidCharacterError.prototype.name = 'InvalidCharacterError';
+	
+	function polyfill (input) {
+	  var str = String(input).replace(/=+$/, '');
+	  if (str.length % 4 == 1) {
+	    throw new InvalidCharacterError("'atob' failed: The string to be decoded is not correctly encoded.");
+	  }
+	  for (
+	    // initialize result and counters
+	    var bc = 0, bs, buffer, idx = 0, output = '';
+	    // get next character
+	    buffer = str.charAt(idx++);
+	    // character found in table? initialize bit storage and add its ascii value;
+	    ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
+	      // and if not first of each 4 characters,
+	      // convert the first 8 bits to one ascii character
+	      bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
+	  ) {
+	    // try to find character in table (0-63, not found => -1)
+	    buffer = chars.indexOf(buffer);
+	  }
+	  return output;
+	}
+	
+	
+	module.exports = typeof window !== 'undefined' && window.atob && window.atob.bind(window) || polyfill;
+
+
+/***/ },
+/* 360 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+	
+	exports.default = reducer;
+	var initialState = {
+	  position: null,
+	  positionUpdateInProgress: false,
+	  positionUpdateErrors: []
+	};
+	
+	function reducer() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+	  var action = arguments[1];
+	
+	  switch (action.type) {
+	    case 'UPDATE_POSITION_PENDING':
+	      {
+	        return _extends({}, state, { positionUpdateInProgress: true });
+	      }
+	    case 'UPDATE_POSITION_FULFILLED':
+	      {
+	        return _extends({}, state, {
+	          positionUpdateInProgress: false,
+	          position: { lat: action.payload.data.position_lat, lng: action.payload.data.position_lng }
+	        });
+	      }
+	    case 'UPDATE_POSITION_REJECTED':
+	      {
+	        return _extends({}, state, {
+	          positionUpdateInProgress: false,
+	          positionUpdateErrors: action.payload
+	        });
+	      }
+	  }
+	  return state;
+	}
+
+/***/ },
+/* 361 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -36050,7 +36260,35 @@
 	}
 
 /***/ },
-/* 358 */
+/* 362 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.fetchCustomers = fetchCustomers;
+	
+	var _axios = __webpack_require__(315);
+	
+	var _axios2 = _interopRequireDefault(_axios);
+	
+	var _APIRequest = __webpack_require__(342);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var customersPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/customers';
+	
+	function fetchCustomers() {
+	  return {
+	    type: 'FETCH_CUSTOMERS',
+	    payload: _APIRequest.apiRequest.get(customersPath)
+	  };
+	}
+
+/***/ },
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36068,7 +36306,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	var vendorsPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/vendors';
+	var vendorsPath = 'http://mister-softee-tracker-api.herokuapp.com/api/v1/vendors';
 	
 	function fetchVendors() {
 	  return {
@@ -36078,7 +36316,7 @@
 	}
 
 /***/ },
-/* 359 */
+/* 364 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -36121,6 +36359,7 @@
 	
 	var UserForm = (_dec = (0, _reactRedux.connect)(function (store) {
 	  return {
+	    position: store.user.position,
 	    session: store.session.session
 	  };
 	}), _dec(_class = function (_Component) {
@@ -36273,7 +36512,7 @@
 	exports.default = (0, _reactRouter.withRouter)(UserForm);
 
 /***/ },
-/* 360 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
