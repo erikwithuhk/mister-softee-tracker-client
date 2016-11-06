@@ -22,6 +22,10 @@ TABLE OF CONTENTS
   padding: 0;
 }
 
+html {
+  font-size: 62.5%;
+}
+
 html,
 body,
 .root {
@@ -55,7 +59,7 @@ Black Olive:     3a3a3a
 ======================= */
 
 body {
-  font: normal 16px 'Quicksand', sans-serif;
+  font: normal 1.6rem 'Quicksand', sans-serif;
 }
 
 .container {
@@ -186,11 +190,11 @@ input[type=submit] {
 }
 
 .primary-cta {
-  font-size: 1.5rem;
+  font-size: 1.5em;
 }
 
 .secondary-cta {
-  font-size: 1rem;
+  font-size: 1em;
 }
 
 
@@ -213,12 +217,12 @@ div.logo_icon {
 }
 
 header h2 {
-  font-size: 1.5rem;
+  font-size: 1.5em;
   position: absolute;
-  left: 0;
+  left: 7.5%;
   top: calc(50% - 0.5em);
   text-align: center;
-  width: 100%;
+  width: 85%;
 }
 
 nav.bottom-nav {
@@ -253,13 +257,13 @@ a.bottom-nav_item--selected:hover {
 
 span.bottom-nav_icon {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.5em;
   margin: 0.25em 0;
   display: block;
 }
 
 p.bottom-nav_label {
-  font-size: 0.75rem;
+  font-size: 0.75em;
 }
 
 
