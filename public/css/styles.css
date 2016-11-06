@@ -306,12 +306,12 @@ section.account-container {
           flex-direction: column;
   -webkit-justify-content: center;
   justify-content: center;
-  height: 100%;
   text-align: center;
 }
 
 button.signout-button {
   border-radius: 5px;
+  width: 15em;
 }
 
 
@@ -325,8 +325,6 @@ section.user-form-container {
   background-color: #eee0cb;
   display: -webkit-flex;
   display: flex;
-  -webkit-flex-direction: column;
-          flex-direction: column;
   -webkit-justify-content: center;
           justify-content: center;
   -webkit-align-items: center;
