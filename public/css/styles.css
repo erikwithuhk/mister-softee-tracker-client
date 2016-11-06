@@ -59,7 +59,7 @@ Black Olive:     3a3a3a
 ======================= */
 
 body {
-  font: normal 1.6rem 'Quicksand', sans-serif;
+  font: normal 1.4rem 'Quicksand', sans-serif;
 }
 
 .container {
@@ -340,4 +340,16 @@ section.user-form-container {
 a.switch-user-form {
   color: #d05879;
   text-align: center;
+}
+
+
+
+/* =======================
+#. Media Queries
+======================= */
+
+@media (min-width: 600px) {
+  body {
+    font-size: 1.6rem;
+  }
 }
