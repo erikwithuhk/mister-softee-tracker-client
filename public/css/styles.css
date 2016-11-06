@@ -89,6 +89,8 @@ header {
 }
 
 main {
+  display: -webkit-flex;
+  display: flex;
   -webkit-flex: 7;
           flex: 7;
 }
@@ -106,7 +108,6 @@ form {
 }
 
 label {
-  font-weight: bold;
   margin: 1em 0 0.5em;
   text-align: center;
 }
@@ -199,10 +200,13 @@ input[type=submit] {
 4. Navs
 ======================= */
 
+header {
+  position: relative;
+}
+
 div.logo_icon {
   background: url(../images/mister-softee-tracker_logo_RGB_cone.png) no-repeat center center;
   background-size: contain;
-  float: left;
   margin: 0 0.5rem;
   padding-bottom: 13%;
   width: 13%;
@@ -211,9 +215,10 @@ div.logo_icon {
 header h2 {
   font-size: 1.5rem;
   position: absolute;
-  left: 25%;
+  left: 0;
+  top: calc(50% - 0.5em);
   text-align: center;
-  width: 50%;
+  width: 100%;
 }
 
 nav.bottom-nav {
@@ -229,7 +234,6 @@ nav.bottom-nav {
 
 a.bottom-nav_item {
   color: #baa898;
-  font-weight: bold;
   text-decoration: none;
   transition: color 0.2s ease-in-out;
 }
@@ -265,7 +269,8 @@ p.bottom-nav_label {
 ======================= */
 
 section.map {
-  height: 100%;
+  -webkit-flex: 1;
+  flex: 1;
 }
 
 section.map--loading {
@@ -295,11 +300,14 @@ section.account-container {
   background-color: #eee0cb;
   display: -webkit-flex;
   display: flex;
+  -webkit-flex: 1;
+          flex: 1;
   -webkit-flex-direction: column;
           flex-direction: column;
   -webkit-justify-content: center;
   justify-content: center;
   height: 100%;
+  text-align: center;
 }
 
 button.signout-button {
@@ -315,7 +323,8 @@ button.signout-button {
 
 section.user-form-container {
   background-color: #eee0cb;
-  height: 100%;
+  -webkit-flex: 1;
+  flex: 1;
 }
 
 a.switch-user-form {

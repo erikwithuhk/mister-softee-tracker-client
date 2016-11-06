@@ -122,7 +122,6 @@ class Map extends Component {
     });
   }
   createMarker(user) {
-    console.log(user);
     let url;
     let scaledSize;
     if (user.type === 'Customer') {
@@ -132,6 +131,9 @@ class Map extends Component {
       url = '../images/mister-softee-tracker_truck-icon.svg';
       scaledSize = new google.maps.Size(50, 32);
     }
+    const infoWindow = new google.maps.InfoWindow({
+      content: '<p>Click the button</p><button>Test</button>',
+    });
     const marker = new google.maps.Marker({
       map: this.map,
       anchorPoint: new google.maps.Point(0, 0),
@@ -142,6 +144,7 @@ class Map extends Component {
         scaledSize,
       },
     });
+    marker.addListener('click', () => infoWindow.open(this.map, marker));
     const newMarkerState = this.state.markers;
     newMarkerState[user.id] = marker;
     setTimeout(() => {

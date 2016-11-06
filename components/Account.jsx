@@ -24,8 +24,11 @@ class Account extends Component {
     hashHistory.push('/');
   }
   render() {
+    const { session } = this.props;
     return (
       <section className="account-container">
+        <h3>{session.email}</h3>
+        <p>{session.userType}</p>
         <button className="signout-button" onClick={this.logOut}>Sign out</button>
       </section>
     );
