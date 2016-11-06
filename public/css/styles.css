@@ -323,8 +323,16 @@ button.signout-button {
 
 section.user-form-container {
   background-color: #eee0cb;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-justify-content: center;
+          justify-content: center;
+  -webkit-align-items: center;
+          align-items: center;
   -webkit-flex: 1;
-  flex: 1;
+          flex: 1;
 }
 
 a.switch-user-form {
