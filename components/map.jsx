@@ -192,15 +192,11 @@ class Map extends Component {
                           break;
                         }
                         default: {
+                          this.setDefaultInfoWindow({ infoWindow, vendorID, customerID });
                         }
                       }
                     } else {
-                      const buttonClass = 'freeze-button';
-                      infoWindow.setContent(`
-                          <p>Hold it!</p>
-                          <button class="freeze-button">Freeze</button>
-                        `);
-                      this.addButtonEventListener({ buttonClass, infoWindow, vendorID, customerID });
+                      this.setDefaultInfoWindow({ infoWindow, vendorID, customerID });
                     }
                   })
                   .catch(err => console.error(err));
@@ -217,7 +213,7 @@ class Map extends Component {
     if (buttonClass === 'freeze-button') {
       buttonNode.addEventListener('click', () => this.initiateFreezeRequest({ infoWindow, vendorID, customerID }));
     } else if (buttonClass === 'cancel-request-button') {
-      buttonNode.addEventListener('click', () => this.cancelFreezeRequest({ infoWindow, requestID }));
+      buttonNode.addEventListener('click', () => this.cancelFreezeRequest({ infoWindow, requestID, vendorID, customerID }));
     }
   }
   setMarkerPosition(user) {
@@ -242,6 +238,15 @@ class Map extends Component {
       requestID,
     });
   }
+  setDefaultInfoWindow({ infoWindow, vendorID, customerID }) {
+    const buttonClass = 'freeze-button';
+    infoWindow.setContent(`
+        <p>Hold it!</p>
+        <button class="freeze-button">Freeze</button>
+      `);
+    this.addButtonEventListener({ buttonClass, infoWindow, vendorID, customerID });
+
+  }
   initiateFreezeRequest({ infoWindow, vendorID, customerID }) {
     const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
     apiRequest.post(`${baseURL}`, { request: { customer_id: customerID, vendor_id: vendorID } })
@@ -254,11 +259,14 @@ class Map extends Component {
                 console.error(err);
               });
   }
-  cancelFreezeRequest({ infoWindow, requestID }) {
+  cancelFreezeRequest({ infoWindow, requestID, vendorID, customerID }) {
     const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
     apiRequest.delete(`${baseURL}/${requestID}`)
               .then(() => {
                 infoWindow.setContent('<p>Request deleted</p>');
+                setTimeout(() => {
+                  this.setDefaultInfoWindow({ infoWindow, vendorID, customerID });
+                }, 3000);
               })
               .catch((err) => {
                 infoWindow.setContent('<p>Request did not go through</p>');
