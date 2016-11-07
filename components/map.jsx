@@ -159,16 +159,26 @@ class Map extends Component {
                   .then((response) => {
                     const freezeRequest = response.data[0]
                     if (freezeRequest) {
+                      const requestID = freezeRequest.id;
                       switch (freezeRequest.status) {
                         case 'pending': {
-                          infoWindow.setContent('<p>Waiting for response...</p>');
+                          this.setPendingInfoWindow({ infoWindow, requestID });
                           setTimeout(() => {
                             infoWindow.close();
                           }, 5000);
                           break;
                         }
                         case 'approved': {
-                          infoWindow.setContent('<p>Approved!</p>');
+                          const buttonClass = 'cancel-request-button';
+                          infoWindow.setContent(`
+                            <p>Approved!</p>
+                            <button class="cancel-request-button">Cancel request</button>
+                          `);
+                          this.addButtonEventListener({
+                            buttonClass,
+                            infoWindow,
+                            requestID,
+                          });
                           setTimeout(() => {
                             infoWindow.close();
                           }, 5000);
@@ -185,11 +195,12 @@ class Map extends Component {
                         }
                       }
                     } else {
-                      infoWindow.setContent('<p>Hold it!</p><button class="freeze-button">Freeze</button>');
-                      const freezeButton = document.querySelector('.freeze-button');
-                      if (freezeButton) {
-                        freezeButton.addEventListener('click', () => this.initiateFreezeRequest({ infoWindow, vendorID, customerID }));
-                      }
+                      const buttonClass = 'freeze-button';
+                      infoWindow.setContent(`
+                          <p>Hold it!</p>
+                          <button class="freeze-button">Freeze</button>
+                        `);
+                      this.addButtonEventListener({ buttonClass, infoWindow, vendorID, customerID });
                     }
                   })
                   .catch(err => console.error(err));
@@ -201,6 +212,14 @@ class Map extends Component {
       this.setState({ markers: newMarkerState });
     }, 1000);
   }
+  addButtonEventListener({ buttonClass, infoWindow, requestID, vendorID, customerID }) {
+    const buttonNode = document.querySelector(`.${buttonClass}`);
+    if (buttonClass === 'freeze-button') {
+      buttonNode.addEventListener('click', () => this.initiateFreezeRequest({ infoWindow, vendorID, customerID }));
+    } else if (buttonClass === 'cancel-request-button') {
+      buttonNode.addEventListener('click', () => this.cancelFreezeRequest({ infoWindow, requestID }));
+    }
+  }
   setMarkerPosition(user) {
     const userPosition = {
       lat: user.position_lat,
@@ -211,17 +230,34 @@ class Map extends Component {
   recenterMap() {
     this.map.setCenter(this.state.position);
   }
+  setPendingInfoWindow({ infoWindow, requestID }) {
+    const buttonClass = 'cancel-request-button';
+    infoWindow.setContent(`
+        <p>Waiting for response...</p>
+        <button class="cancel-request-button">Cancel request</button>
+      `);
+    this.addButtonEventListener({
+      buttonClass,
+      infoWindow,
+      requestID,
+    });
+  }
   initiateFreezeRequest({ infoWindow, vendorID, customerID }) {
     const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
     apiRequest.post(`${baseURL}`, { request: { customer_id: customerID, vendor_id: vendorID } })
               .then((response) => {
-                console.log(response.data);
-                infoWindow.setContent('<p>Waiting for response...</p>');
+                const requestID = response.data.id;
+                this.setPendingInfoWindow({ infoWindow, requestID });
               })
               .catch((err) => {
                 infoWindow.setContent('<p>Request did not go through</p>');
                 console.error(err);
               });
+  }
+  cancelFreezeRequest({ infoWindow, requestID }) {
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    console.log(requestID);
+    // apiRequest.delete(`${baseURL}/${requestID}`);
   }
   render() {
     return (
