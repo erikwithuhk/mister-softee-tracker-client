@@ -147,7 +147,7 @@ class Map extends Component {
         scaledSize,
       },
     });
-    if (this.props.session.authToken) {
+    if (this.props.session.authToken && user.type !== 'Customer') {
       marker.addListener('click', () => {
         infoWindow.setContent('Loading...');
         infoWindow.open(this.map, marker);
