@@ -24,7 +24,7 @@ class App extends Component {
 
     let signedInNav;
     if (session.authToken) {
-      signedInNav = (<BottomNav pathname={location.pathname} />);
+      signedInNav = (<BottomNav pathname={location.pathname} session={session} />);
     } else {
       signedInNav = (
           <Link to="/signup" className="bottom-button">

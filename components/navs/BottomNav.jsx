@@ -6,7 +6,7 @@ const propTypes = {
   pathname: React.PropTypes.string,
 };
 
-const bottomNav = ({ pathname }) => {
+const bottomNav = ({ pathname, session }) => {
   let mapSelected = '';
   let requestSelected = '';
   let accountSelected = '';
@@ -30,16 +30,19 @@ const bottomNav = ({ pathname }) => {
     }
   }
 
+  const requestsLink = (
+    <Link to="/request" className={`bottom-nav_item ${requestSelected}`}>
+      <Icon className="bottom-nav_icon" name="hand-o-up" />
+      <p className="bottom-nav_label" >Requests</p>
+    </Link>
+  );
   return (
     <nav className="bottom-nav">
       <Link to="/" className={`bottom-nav_item ${mapSelected}`}>
         <Icon className="bottom-nav_icon" name="map-o" />
         <p className="bottom-nav_label" >Map</p>
       </Link>
-      <Link to="/request" className={`bottom-nav_item ${requestSelected}`}>
-        <Icon className="bottom-nav_icon" name="hand-o-up" />
-        <p className="bottom-nav_label" >Request</p>
-      </Link>
+      {session.userType === 'Vendor' ? requestsLink : ''}
       <Link to="/account" className={`bottom-nav_item ${accountSelected}`}>
         <Icon className="bottom-nav_icon" name="user-o" />
         <p className="bottom-nav_label" >Account</p>

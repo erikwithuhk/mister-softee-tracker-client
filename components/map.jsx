@@ -171,7 +171,7 @@ class Map extends Component {
                         case 'approved': {
                           const buttonClass = 'cancel-request-button';
                           infoWindow.setContent(`
-                            <p class="info-window_text">Approved!</p>
+                            <p class="info-window_text">Your freeze request was approved!</p>
                             <button class="cancel-request-button info-window_button">Cancel request</button>
                           `);
                           this.addButtonEventListener({
@@ -185,7 +185,7 @@ class Map extends Component {
                           break;
                         }
                         case 'rejected': {
-                          infoWindow.setContent('<p class="info-window_text">Rejected :(</p>');
+                          infoWindow.setContent('<p class="info-window_text">Your freeze request was rejected :(</p>');
                           setTimeout(() => {
                             infoWindow.close();
                           }, 5000);
@@ -229,7 +229,7 @@ class Map extends Component {
   setPendingInfoWindow({ infoWindow, requestID }) {
     const buttonClass = 'cancel-request-button';
     infoWindow.setContent(`
-        <p class="info-window_text">Waiting for response...</p>
+        <p class="info-window_text">Waiting for driver to respond...</p>
         <button class="cancel-request-button info-window_button">Cancel request</button>
       `);
     this.addButtonEventListener({
@@ -241,7 +241,7 @@ class Map extends Component {
   setDefaultInfoWindow({ infoWindow, vendorID, customerID }) {
     const buttonClass = 'freeze-button';
     infoWindow.setContent(`
-        <p class="info-window_text">Hold it!</p>
+        <p class="info-window_text">Make a freeze request to make your driver stay where they are.</p>
         <button class="freeze-button info-window_button">Freeze</button>
       `);
     this.addButtonEventListener({ buttonClass, infoWindow, vendorID, customerID });
