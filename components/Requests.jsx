@@ -33,9 +33,30 @@ class Requests extends Component {
   }
   fetchRequests() {
     this.props.dispatch(fetchVendorRequests(this.props.session.userID));
-    this.createRequestNodes();
   }
-  createRequestNodes() {
+  approveRequest(e) {
+    const buttonNode = e.target;
+    const requestID = buttonNode.getAttribute('data-request-id');
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'approved' } })
+              .then((response) => {
+                this.fetchRequests();
+                // buttonNode.parentNode.remove();
+              })
+              .catch(err => console.error(err));
+  }
+  rejectRequest(e) {
+    const buttonNode = e.target;
+    const requestID = buttonNode.getAttribute('data-request-id');
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'rejected' } })
+              .then((response) => {
+                this.fetchRequests();
+                // buttonNode.parentNode.remove();
+              })
+              .catch(err => console.error(err));
+  }
+  render() {
     let requestNodes = [];
     this.props.requests.forEach((request) => {
       if (request.status === 'pending') {
@@ -65,32 +86,9 @@ class Requests extends Component {
     if (requestNodes.length < 1) {
       requestNodes = (<p className="no-requests-message">No pending requests</p>);
     }
-    this.setState({ requestNodes });
-  }
-  approveRequest(e) {
-    const buttonNode = e.target;
-    const requestID = buttonNode.getAttribute('data-request-id');
-    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
-    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'approved' } })
-              .then((response) => {
-                buttonNode.parentNode.remove();
-              })
-              .catch(err => console.error(err));
-  }
-  rejectRequest(e) {
-    const buttonNode = e.target;
-    const requestID = buttonNode.getAttribute('data-request-id');
-    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
-    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'rejected' } })
-              .then((response) => {
-                buttonNode.parentNode.remove();
-              })
-              .catch(err => console.error(err));
-  }
-  render() {
     return (
       <ul className="requests-list">
-        {this.state.requestNodes}
+        {requestNodes}
       </ul>
     );
   }

@@ -108,9 +108,9 @@ form {
           flex-direction: column;
   -webkit-justify-content: center;
           justify-content: center;
+          height: 100%;
   margin: 0 auto;
   width: 80%;
-  height: 100%;
 }
 
 label {
@@ -368,6 +368,7 @@ ul.requests-list {
   list-style-type: none;
   -webkit-flex: 1;
           flex: 1;
+  max-width: 960px;
   overflow: scroll;
   text-align: center;
 }
@@ -405,5 +406,32 @@ button.request-list-item_button {
 @media (min-width: 600px) {
   body {
     font-size: 1.6rem;
+  }
+
+  div.logo_icon {
+    padding-bottom: 8%;
+    width: 8%;
+  }
+}
+
+@media (min-width: 750px) {
+  form.user-form {
+    width: 30em;
+  }
+
+  div.logo_icon {
+    padding-bottom: 5%;
+    width: 5%;
+  }
+}
+
+@media (min-width: 960px) {
+  ul.requests-list {
+    margin: 0 auto;
+  }
+
+  ul.requests-list li {
+    border-left: 2px solid #baa898;
+    border-right: 2px solid #baa898;
   }
 }
