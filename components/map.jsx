@@ -99,6 +99,7 @@ class Map extends Component {
         scaledSize: new google.maps.Size(64, 64),
       },
       opacity: 0.75,
+      zIndex: 0,
     });
     setTimeout(() => {
 
