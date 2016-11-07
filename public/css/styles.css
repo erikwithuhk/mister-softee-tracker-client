@@ -294,6 +294,22 @@ section.map--loading p {
   margin: 0 0 2em;
 }
 
+.gm-style {
+  font: inherit;
+}
+
+.gm-style-iw > div > div {
+  text-align: center;
+}
+
+p.info-window_text {
+  margin-top: 1.5em;
+}
+
+button.info-window_button {
+  border-radius: 5px;
+}
+
 
 
 

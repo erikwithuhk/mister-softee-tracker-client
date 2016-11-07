@@ -171,8 +171,8 @@ class Map extends Component {
                         case 'approved': {
                           const buttonClass = 'cancel-request-button';
                           infoWindow.setContent(`
-                            <p>Approved!</p>
-                            <button class="cancel-request-button">Cancel request</button>
+                            <p class="info-window_text">Approved!</p>
+                            <button class="cancel-request-button info-window_button">Cancel request</button>
                           `);
                           this.addButtonEventListener({
                             buttonClass,
@@ -185,7 +185,7 @@ class Map extends Component {
                           break;
                         }
                         case 'rejected': {
-                          infoWindow.setContent('<p>Rejected :(</p>');
+                          infoWindow.setContent('<p class="info-window_text">Rejected :(</p>');
                           setTimeout(() => {
                             infoWindow.close();
                           }, 5000);
@@ -229,8 +229,8 @@ class Map extends Component {
   setPendingInfoWindow({ infoWindow, requestID }) {
     const buttonClass = 'cancel-request-button';
     infoWindow.setContent(`
-        <p>Waiting for response...</p>
-        <button class="cancel-request-button">Cancel request</button>
+        <p class="info-window_text">Waiting for response...</p>
+        <button class="cancel-request-button info-window_button">Cancel request</button>
       `);
     this.addButtonEventListener({
       buttonClass,
@@ -241,8 +241,8 @@ class Map extends Component {
   setDefaultInfoWindow({ infoWindow, vendorID, customerID }) {
     const buttonClass = 'freeze-button';
     infoWindow.setContent(`
-        <p>Hold it!</p>
-        <button class="freeze-button">Freeze</button>
+        <p class="info-window_text">Hold it!</p>
+        <button class="freeze-button info-window_button">Freeze</button>
       `);
     this.addButtonEventListener({ buttonClass, infoWindow, vendorID, customerID });
 
