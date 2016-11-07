@@ -19,6 +19,9 @@ class Account extends Component {
     super(props);
     this.logOut = this.logOut.bind(this);
   }
+  componentDidMount() {
+    document.body.style.zoom = 1.0;
+  }
   logOut() {
     this.props.dispatch(logOut());
     hashHistory.push('/');

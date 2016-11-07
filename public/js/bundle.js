@@ -28493,6 +28493,11 @@
 	  }
 	
 	  _createClass(Account, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      document.body.style.zoom = 1.0;
+	    }
+	  }, {
 	    key: 'logOut',
 	    value: function logOut() {
 	      this.props.dispatch((0, _authActions.logOut)());
@@ -30193,6 +30198,7 @@
 	    value: function componentDidMount() {
 	      var _this2 = this;
 	
+	      document.body.style.zoom = 1.0;
 	      this.initializeMap();
 	      this.state.intervalID = setInterval(function () {
 	        _this2.getUserPosition();
@@ -30274,7 +30280,8 @@
 	          url: '../images/mister-softee-tracker_current-location-dot.svg',
 	          scaledSize: new google.maps.Size(64, 64)
 	        },
-	        opacity: 0.75
+	        opacity: 0.75,
+	        zIndex: 0
 	      });
 	      setTimeout(function () {});
 	      this.setState({ currentPositionMarker: currentPositionMarker });
@@ -32264,6 +32271,7 @@
 	  _createClass(Requests, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
+	      document.body.style.zoom = 1.0;
 	      this.fetchRequests();
 	    }
 	  }, {
@@ -32281,7 +32289,6 @@
 	      var baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
 	      _APIRequest.apiRequest.patch(baseURL + '/' + requestID, { request: { status: 'approved' } }).then(function (response) {
 	        _this2.fetchRequests();
-	        // buttonNode.parentNode.remove();
 	      }).catch(function (err) {
 	        return console.error(err);
 	      });
@@ -32296,7 +32303,6 @@
 	      var baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
 	      _APIRequest.apiRequest.patch(baseURL + '/' + requestID, { request: { status: 'rejected' } }).then(function (response) {
 	        _this3.fetchRequests();
-	        // buttonNode.parentNode.remove();
 	      }).catch(function (err) {
 	        return console.error(err);
 	      });
@@ -32428,6 +32434,11 @@
 	  }
 	
 	  _createClass(UserForm, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      document.body.style.zoom = 1.0;
+	    }
+	  }, {
 	    key: 'handleChange',
 	    value: function handleChange(e) {
 	      var stateKey = e.target.name;

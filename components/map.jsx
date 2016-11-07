@@ -36,6 +36,7 @@ class Map extends Component {
     this.clearPositionInterval = this.clearPositionInterval.bind(this);
   }
   componentDidMount() {
+    document.body.style.zoom = 1.0;
     this.initializeMap();
     this.state.intervalID = setInterval(() => {
       this.getUserPosition();

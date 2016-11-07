@@ -29,6 +29,7 @@ class Requests extends Component {
     this.rejectRequest = this.rejectRequest.bind(this);
   }
   componentDidMount() {
+    document.body.style.zoom = 1.0;
     this.fetchRequests();
   }
   fetchRequests() {
@@ -41,7 +42,6 @@ class Requests extends Component {
     apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'approved' } })
               .then((response) => {
                 this.fetchRequests();
-                // buttonNode.parentNode.remove();
               })
               .catch(err => console.error(err));
   }
@@ -52,7 +52,6 @@ class Requests extends Component {
     apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'rejected' } })
               .then((response) => {
                 this.fetchRequests();
-                // buttonNode.parentNode.remove();
               })
               .catch(err => console.error(err));
   }

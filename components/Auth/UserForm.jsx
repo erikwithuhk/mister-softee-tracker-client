@@ -31,6 +31,9 @@ class UserForm extends Component {
     this.handleCheckboxChange = this.handleCheckboxChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
+  componentDidMount() {
+    document.body.style.zoom = 1.0;
+  }
   handleChange(e) {
     const stateKey = e.target.name;
     const stateValue = e.target.value;
