@@ -9,3 +9,11 @@ export function fetchVendors() {
     payload: apiRequest.get(vendorsPath),
   };
 }
+
+export function fetchVendorRequests(vendorID) {
+  console.log(`${vendorsPath}/${vendorID}/requests`);
+  return {
+    type: 'FETCH_VENDOR_REQUESTS',
+    payload: apiRequest.get(`${vendorsPath}/${vendorID}/requests`),
+  }
+}

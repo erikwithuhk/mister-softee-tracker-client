@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import { GoogleMap, Marker, SearchBox } from 'react-google-maps';
 
 import TopNav from './navs/TopNav.jsx';
 import BottomNav from './navs/bottomNav.jsx';
