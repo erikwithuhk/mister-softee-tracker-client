@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 // import { Link } from 'react-router';
 import { connect } from 'react-redux';
 
+import { apiRequest } from '../services/APIRequest';
+
 import { fetchVendorRequests } from '../actions/vendorActions'
 
 const propTypes = {
@@ -18,23 +20,77 @@ const propTypes = {
 })
 
 class Requests extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      requestNodes: [],
+    };
+    this.approveRequest = this.approveRequest.bind(this);
+    this.rejectRequest = this.rejectRequest.bind(this);
+  }
   componentDidMount() {
     this.fetchRequests();
   }
   fetchRequests() {
     this.props.dispatch(fetchVendorRequests(this.props.session.userID));
+    this.createRequestNodes();
+  }
+  createRequestNodes() {
+    let requestNodes = [];
+    this.props.requests.forEach((request) => {
+      if (request.status === 'pending') {
+        requestNodes.push(
+          <li key={request.id}>
+            <p className="request-list-item_text">
+              A customer wants you to stay in your current location.
+            </p>
+            <button
+              className="request-list-item_button request-list-item_button--approve"
+              data-request-id={request.id}
+              onClick={this.approveRequest}
+            >
+              Approve
+            </button>
+            <button
+              className="request-list-item_button request-list-item_button--reject"
+              data-request-id={request.id}
+              onClick={this.rejectRequest}
+            >
+              Reject
+            </button>
+          </li>
+        );
+      }
+    });
+    if (requestNodes.length < 1) {
+      requestNodes = (<p className="no-requests-message">No pending requests</p>);
+    }
+    this.setState({ requestNodes });
+  }
+  approveRequest(e) {
+    const buttonNode = e.target;
+    const requestID = buttonNode.getAttribute('data-request-id');
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'approved' } })
+              .then((response) => {
+                buttonNode.parentNode.remove();
+              })
+              .catch(err => console.error(err));
+  }
+  rejectRequest(e) {
+    const buttonNode = e.target;
+    const requestID = buttonNode.getAttribute('data-request-id');
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    apiRequest.patch(`${baseURL}/${requestID}`, { request: { status: 'rejected' } })
+              .then((response) => {
+                buttonNode.parentNode.remove();
+              })
+              .catch(err => console.error(err));
   }
   render() {
-    const requestNodes = this.props.requests.map(request => (
-      <li key={request.id}>
-        <p>A customer wants you to stay in your current location.</p>
-        <button>Approve</button>
-        <button>Reject</button>
-      </li>
-    ));
     return (
       <ul className="requests-list">
-        {requestNodes}
+        {this.state.requestNodes}
       </ul>
     );
   }

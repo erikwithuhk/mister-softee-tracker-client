@@ -7,6 +7,7 @@ TABLE OF CONTENTS
 5. Map
 6. Account
 7. User Form
+8. Requests
 #. Media Queries
 ======================= */
 
@@ -93,6 +94,7 @@ header {
 }
 
 main {
+  background-color: #eee0cb;
   display: -webkit-flex;
   display: flex;
   -webkit-flex: 7;
@@ -279,7 +281,6 @@ section.map {
 }
 
 section.map--loading {
-  background-color: #eee0cb;
   color: #3a3a3a;
   display: -webkit-flex;
   display: flex;
@@ -318,7 +319,6 @@ button.info-window_button {
 ======================= */
 
 section.account-container {
-  background-color: #eee0cb;
   display: -webkit-flex;
   display: flex;
   -webkit-flex: 1;
@@ -343,7 +343,6 @@ button.signout-button {
 
 
 section.user-form-container {
-  background-color: #eee0cb;
   display: -webkit-flex;
   display: flex;
   -webkit-justify-content: center;
@@ -358,6 +357,44 @@ a.switch-user-form {
   color: #d05879;
   text-align: center;
 }
+
+
+
+/* =======================
+8. Requests
+======================= */
+
+ul.requests-list {
+  list-style-type: none;
+  -webkit-flex: 1;
+          flex: 1;
+  overflow: scroll;
+  text-align: center;
+}
+
+ul.requests-list li {
+  background-color: #fff;
+  border-top: 2px solid #baa898;
+  border-bottom: 2px solid #baa898;
+  margin-bottom: 2em;
+  padding: 1rem;
+}
+
+p.request-list-item_text {
+  margin-top: 1em;
+}
+
+button.request-list-item_button {
+  margin: 1em 1%;
+  border-radius: 5px;
+  width: 48%;
+}
+
+.no-requests-message {
+  top: calc(50% - 0.5em);
+  position: relative;
+}
+
 
 
 
