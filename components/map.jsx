@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from 'react-fa';
 
+import { apiRequest } from '../services/APIRequest';
+
 import { updatePosition } from '../actions/userActions';
 import { fetchCustomers } from '../actions/customerActions';
 import { fetchVendors } from '../actions/vendorActions';
@@ -132,7 +134,8 @@ class Map extends Component {
       scaledSize = new google.maps.Size(50, 32);
     }
     const infoWindow = new google.maps.InfoWindow({
-      content: '<p>Click the button</p><button>Test</button>',
+      content: '',
+      pixelOffset: new google.maps.Size(0, 0),
     });
     const marker = new google.maps.Marker({
       map: this.map,
@@ -144,7 +147,54 @@ class Map extends Component {
         scaledSize,
       },
     });
-    marker.addListener('click', () => infoWindow.open(this.map, marker));
+    if (this.props.session.authToken) {
+      marker.addListener('click', () => {
+        infoWindow.setContent('Loading...');
+        infoWindow.open(this.map, marker);
+        const customerID = this.props.session.userID;
+        const vendorID = user.id;
+        const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+        const query = `?customer_id=${customerID}&vendor_id=${vendorID}`;
+        apiRequest.get(`${baseURL}${query}`)
+                  .then((response) => {
+                    const freezeRequest = response.data[0]
+                    if (freezeRequest) {
+                      switch (freezeRequest.status) {
+                        case 'pending': {
+                          infoWindow.setContent('<p>Waiting for response...</p>');
+                          setTimeout(() => {
+                            infoWindow.close();
+                          }, 5000);
+                          break;
+                        }
+                        case 'approved': {
+                          infoWindow.setContent('<p>Approved!</p>');
+                          setTimeout(() => {
+                            infoWindow.close();
+                          }, 5000);
+                          break;
+                        }
+                        case 'rejected': {
+                          infoWindow.setContent('<p>Rejected :(</p>');
+                          setTimeout(() => {
+                            infoWindow.close();
+                          }, 5000);
+                          break;
+                        }
+                        default: {
+                        }
+                      }
+                    } else {
+                      infoWindow.setContent('<p>Hold it!</p><button class="freeze-button">Freeze</button>');
+                      const freezeButton = document.querySelector('.freeze-button');
+                      if (freezeButton) {
+                        freezeButton.addEventListener('click', () => this.initiateFreezeRequest({ infoWindow, vendorID, customerID }));
+                      }
+                    }
+                  })
+                  .catch(err => console.error(err));
+      });
+    }
     const newMarkerState = this.state.markers;
     newMarkerState[user.id] = marker;
     setTimeout(() => {
@@ -160,6 +210,18 @@ class Map extends Component {
   }
   recenterMap() {
     this.map.setCenter(this.state.position);
+  }
+  initiateFreezeRequest({ infoWindow, vendorID, customerID }) {
+    const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
+    apiRequest.post(`${baseURL}`, { request: { customer_id: customerID, vendor_id: vendorID } })
+              .then((response) => {
+                console.log(response.data);
+                infoWindow.setContent('<p>Waiting for response...</p>');
+              })
+              .catch((err) => {
+                infoWindow.setContent('<p>Request did not go through</p>');
+                console.error(err);
+              });
   }
   render() {
     return (

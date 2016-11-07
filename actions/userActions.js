@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { apiRequest } from '../services/APIRequest';
 
 const usersPath = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/users';
