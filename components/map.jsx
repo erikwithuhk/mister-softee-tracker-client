@@ -256,8 +256,14 @@ class Map extends Component {
   }
   cancelFreezeRequest({ infoWindow, requestID }) {
     const baseURL = 'https://mister-softee-tracker-api.herokuapp.com/api/v1/requests';
-    console.log(requestID);
-    // apiRequest.delete(`${baseURL}/${requestID}`);
+    apiRequest.delete(`${baseURL}/${requestID}`)
+              .then(() => {
+                infoWindow.setContent('<p>Request deleted</p>');
+              })
+              .catch((err) => {
+                infoWindow.setContent('<p>Request did not go through</p>');
+                console.error(err);
+              });
   }
   render() {
     return (
