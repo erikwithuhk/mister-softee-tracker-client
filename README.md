@@ -40,3 +40,15 @@ Once the customer initiates the freeze request, the request is sent to the vendo
 When the vendor responds to the freeze request, a message is sent to the user letting them know whether the request was approved or rejected.
 
 #### Logged-In Vendor
+
+<p align="center"><img src="./screenshots/home_vendor.png" alt="Vendor Home" width="500" /></p>
+
+When a vendor logs in, they are redirected to the map that displays the locations of all active customers in their area.
+
+<p align="center"><img src="./screenshots/vendor_requests_pending.png" alt="Vendor Requests Pending" width="500" /></p>
+
+If a vendor has pending freeze requests, they appear in the Requests tab with the ability to approve or reject the request.
+
+<p align="center"><img src="./screenshots/vendor_requests_pending.png" alt="Vendor Requests Pending" width="500" /></p>
+
+A message is displayed when there are no pending requests.
