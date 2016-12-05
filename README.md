@@ -6,6 +6,14 @@ Everybody in New York knows the jingle of the Mister Softee ice cream trucks, th
 
 This repo is the client app that I built using React and Redux. The Rails API that I built to handle the data for this app is located here: https://github.com/erikwithuhk/mister-softee-tracker-api.
 
+## Installation Instructions
+
+Clone the repository to your local machine, and run `npm install` from directory in the shell to install the project dependencies.
+
+## Usage Instructions
+
+Run `npm start` from the directory in the shell to start the server in Node.
+
 ## User Flow
 
 #### Logged-Out User
