@@ -49,6 +49,6 @@ When a vendor logs in, they are redirected to the map that displays the location
 
 If a vendor has pending freeze requests, they appear in the Requests tab with the ability to approve or reject the request.
 
-<p align="center"><img src="./screenshots/vendor_requests_pending.png" alt="Vendor Requests Pending" width="500" /></p>
+<p align="center"><img src="./screenshots/vendor_requests_empty.png" alt="Vendor Requests Empty" width="500" /></p>
 
-A message is displayed when there are no pending requests.
+A message is displayed to the vendor when there are no pending requests.
