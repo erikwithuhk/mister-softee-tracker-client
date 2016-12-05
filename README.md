@@ -15,7 +15,7 @@ When a user first arrives at the app and is not logged in, the browser makes a r
 
 In order to access additional features, they must first create an account or log in.
 
-<img src="./screenshots/home_no-auth.png" style="max-width: 400px"/>
+<p align="center"><img src="./screenshots/signup.png" alt="Sign up" width="500" style="display: inline-block" /><img src="./screenshots/login.png" alt="Log in" width="500" style="display: inline-block"/></p>
 
 
 #### Logged-In Customer
