@@ -9,7 +9,7 @@ This repo is the client app that I built using React and Redux. The Rails API th
 ## User Flow
 
 #### Logged-Out User
-<img src="./screenshots/home_no-auth.png" alt="Home | Unauthenticated" width="400" />
+<p align="center" ><img src="./screenshots/home_no-auth.png" alt="Home | Unauthenticated" width="500" /></p>
 
 When a user first arrives at the app and is not logged in, the browser makes a request for the user's location, and then re-centers the map to show where the Mister Softee truck drivers in their area are located.
 
