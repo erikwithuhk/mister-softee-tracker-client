@@ -15,8 +15,11 @@ When a user first arrives at the app and is not logged in, the browser makes a r
 
 In order to access additional features, they must first create an account or log in.
 
-<p align="center"><img src="./screenshots/signup.png" alt="Sign up" width="500" style="display: inline-block" /><img src="./screenshots/login.png" alt="Log in" width="500" style="display: inline-block"/></p>
+<p align="center"><img src="./screenshots/signup.png" alt="Sign up" width="500" style="display: inline-block" /></p>
 
+When creating an account, the user has the option to select the "I am a Mister Softee truck driver" checkbox, which will create a vendor account, otherwise the account type defaults to customer.
+
+<p align="center"><img src="./screenshots/login.png" alt="Log in" width="500" style="display: inline-block"/></p>
 
 #### Logged-In Customer
 
